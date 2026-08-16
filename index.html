@@ -17,14 +17,14 @@
 <meta property="og:title" content="كلمات أعجبتني — الأرشيف">
 <meta property="og:description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢ — أكثر من ٨١٠٠ تدوينة قابلة للبحث والتصفح.">
 <meta property="og:image" content="icon-512.png">
-<!-- استبدل الرابط ده برابط GitHub Pages الفعلي بعد النشر (مثال: https://salimhayba.github.io/) -->
-<meta property="og:url" content="https://salimhayba.github.io/">
+<!-- استبدل الرابط ده برابط GitHub Pages الفعلي بعد النشر (مثال: https://salimhayba.github.io/kalimat-archive/) -->
+<meta property="og:url" content="https://salimhayba.github.io/kalimat-archive/">
 <meta property="og:locale" content="ar_AR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="كلمات أعجبتني — الأرشيف">
 <meta name="twitter:description" content="أرشيف شخصي لما راق سالم عبدالواحد من شعر ونثر، منذ ٢٠١٢">
 <meta name="twitter:image" content="icon-512.png">
-<link rel="canonical" href="https://salimhayba.github.io/">
+<link rel="canonical" href="https://salimhayba.github.io/kalimat-archive/">
 <meta name="description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢، مع بحث وتصفح حسب النوع والقسم والسنة.">
 
 <style>
@@ -371,7 +371,48 @@
   .modal-close svg{ width:14px; height:14px; }
   .modal-label{ font-family: var(--sans); font-size: 0.7rem; color: var(--rubric); text-align:center; margin-bottom: 10px; letter-spacing:0.5px; }
   .modal-text{ font-size: 1.2rem; line-height: 2.1; text-align:center; white-space: pre-wrap; }
+  .modal-text.poem-mode{ line-height: 2.5; letter-spacing: 0.2px; }
   .modal-date{ font-family: var(--sans); font-size: 0.7rem; color: var(--ink-soft); text-align:center; margin-top:14px; }
+  .modal-meta-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .modal-stars{ display:flex; justify-content:center; gap:6px; margin-top:16px; }
+  .modal-star{ font-size:1.3rem; line-height:1; cursor:pointer; color: var(--line); background:none; border:none; padding:2px; }
+  .modal-star.on{ color: var(--brass); }
+  .modal-nav{
+    display:flex; justify-content:space-between; align-items:center; margin-top:18px;
+    padding-top:14px; border-top: 1px solid var(--line);
+  }
+  .modal-nav-btn{
+    font-family: var(--sans); font-size: 0.75rem; color: var(--brass-deep); background:none; border:none;
+    cursor:pointer; display:flex; align-items:center; gap:4px; padding:6px;
+  }
+  .modal-nav-btn:disabled{ opacity:0.3; cursor:default; }
+  .modal-nav-btn svg{ width:16px; height:16px; }
+  #statsBtn.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
+  .stats-panel{ padding: 10px 4px 24px; }
+  .stats-hero{ text-align:center; padding: 18px 10px 22px; }
+  .stats-hero .n{ font-family: var(--serif); font-size: 2.6rem; color: var(--brass-deep); font-weight:700; }
+  .stats-hero .l{ font-family: var(--sans); font-size: 0.78rem; color: var(--ink-soft); margin-top:4px; }
+  .stats-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+  .stats-card{
+    border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px; background: var(--glass-bg);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); cursor:pointer;
+  }
+  .stats-card .n{ font-family: var(--serif); font-size: 1.4rem; color: var(--ink); font-weight:700; }
+  .stats-card .l{ font-family: var(--sans); font-size: 0.68rem; color: var(--ink-soft); margin-top:2px; }
+  .stats-section-title{ font-family: var(--sans); font-size: 0.75rem; color: var(--brass-deep); font-weight:700; margin: 18px 6px 8px; }
+  .stats-list{ display:flex; flex-direction:column; gap:6px; }
+  .stats-row{
+    display:flex; justify-content:space-between; align-items:center; padding:9px 14px; cursor:pointer;
+    border: 1px solid var(--glass-border); border-radius: 8px; background: var(--glass-bg);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    font-family: var(--sans); font-size: 0.82rem; color: var(--ink);
+  }
+  .stats-row .c{ color: var(--ink-soft); font-size:0.72rem; }
+  .stats-bar-row{ display:flex; align-items:center; gap:8px; font-family: var(--sans); font-size:0.72rem; color: var(--ink-soft); }
+  .stats-bar-track{ flex:1; height:8px; border-radius:4px; background: var(--line); overflow:hidden; }
+  .stats-bar-fill{ height:100%; background: var(--brass); }
+  .stats-bar-row .y{ width:38px; flex-shrink:0; }
+  .stats-bar-row .v{ width:34px; flex-shrink:0; text-align:left; }
 
   footer.app-footer{ text-align:center; padding: 20px 16px 40px; font-family: var(--sans); font-size: 0.68rem; color: var(--ink-soft); }
 
@@ -464,6 +505,9 @@
       <button class="icon-btn" id="reviewBtn" aria-label="مراجعة التصنيف">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
       </button>
+      <button class="icon-btn" id="statsBtn" aria-label="الأرشيف بالأرقام">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/></svg>
+      </button>
       <input type="file" id="importFile" accept=".json" multiple style="display:none;">
     </div>
     <div class="type-tabs" id="typeTabs"></div>
@@ -482,6 +526,7 @@
 
   <div class="timeline-view" id="timelineView" style="display:none;"></div>
   <div class="review-panel" id="reviewPanel" style="display:none;"></div>
+  <div class="stats-panel" id="statsPanel" style="display:none;"></div>
   <div class="wotd-section" id="wotdSection" style="display:none;"></div>
   <div class="home-categories" id="homeCategories" style="display:none;"></div>
   <div class="on-this-day" id="onThisDayBanner" style="display:none;"></div>
@@ -495,9 +540,16 @@
     <button class="modal-close" id="modalClose">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="modal-label">كلمة اليوم</div>
+    <div class="modal-label" id="modalLabel">كلمة اليوم</div>
     <div class="modal-text" id="modalText"></div>
     <div class="modal-date" id="modalDate"></div>
+    <div class="modal-stars" id="modalStars"></div>
+    <div class="modal-nav">
+      <button class="modal-nav-btn" id="modalPrevBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>السابق
+      </button>
+      <button class="modal-nav-btn" id="modalNextBtn">التالي<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
   </div>
 </div>
 
@@ -885,6 +937,8 @@
   var timelineView = document.getElementById('timelineView');
   var reviewBtn = document.getElementById('reviewBtn');
   var reviewPanel = document.getElementById('reviewPanel');
+  var statsBtn = document.getElementById('statsBtn');
+  var statsPanel = document.getElementById('statsPanel');
   var searchInput = document.getElementById('searchInput');
 
   function buildTypeTabs(){
@@ -1056,7 +1110,9 @@
     buildTimeline();
     timelineView.style.display = 'flex';
     reviewPanel.style.display = 'none';
+    statsPanel.style.display = 'none';
     reviewBtn.classList.remove('active');
+    statsBtn.classList.remove('active');
     feedEl.style.display = 'none';
     loadMoreBtn.style.display = 'none';
     if(wotdSection) wotdSection.style.display = 'none';
@@ -1067,9 +1123,11 @@
   function showFeedView(){
     timelineView.style.display = 'none';
     reviewPanel.style.display = 'none';
+    statsPanel.style.display = 'none';
     feedEl.style.display = '';
     timelineBtn.classList.remove('active');
     reviewBtn.classList.remove('active');
+    statsBtn.classList.remove('active');
     buildOnThisDayBanner();
     render(true);
   }
@@ -1137,6 +1195,8 @@
     renderReviewCard();
     reviewPanel.style.display = 'block';
     timelineView.style.display = 'none';
+    statsPanel.style.display = 'none';
+    statsBtn.classList.remove('active');
     feedEl.style.display = 'none';
     loadMoreBtn.style.display = 'none';
     if(wotdSection) wotdSection.style.display = 'none';
@@ -1168,6 +1228,86 @@
       renderReviewCard();
       return;
     }
+  });
+
+  // ================= الأرشيف بالأرقام (Stats Dashboard) =================
+  function buildStatsPanel(){
+    var authorsList = Object.keys(AUTHOR_COUNTS).sort(function(a,b){ return AUTHOR_COUNTS[b]-AUTHOR_COUNTS[a]; }).slice(0,10);
+    var yearsList = Object.keys(YEAR_COUNTS).sort(); // تصاعديًا لعرض تطور النشاط عبر الزمن
+    var maxYearCount = Math.max.apply(null, yearsList.map(function(y){ return YEAR_COUNTS[y]; }));
+
+    var html = '<button class="timeline-back" id="statsBackBtn">← رجوع إلى الأرشيف</button>';
+    html += '<div class="stats-hero"><div class="n">' + TOTAL.toLocaleString('ar') + '</div><div class="l">مادة محفوظة منذ ٢٠١٢</div></div>';
+
+    html += '<div class="stats-grid">';
+    ['شعر','نثر','صورة'].forEach(function(t){
+      html += '<div class="stats-card" data-stat-type="'+t+'"><div class="n">'+(TYPE_COUNTS[t]||0).toLocaleString('ar')+'</div><div class="l">'+t+'</div></div>';
+    });
+    var authorTotal = Object.keys(AUTHOR_COUNTS).length;
+    html += '<div class="stats-card" data-stat-info="1"><div class="n">'+authorTotal.toLocaleString('ar')+'</div><div class="l">مؤلف موثَّق</div></div>';
+    html += '</div>';
+
+    html += '<div class="stats-section-title">أعلى ١٠ مؤلفين</div><div class="stats-list">';
+    authorsList.forEach(function(name){
+      html += '<div class="stats-row" data-stat-author="'+name+'"><span>'+name+'</span><span class="c">'+AUTHOR_COUNTS[name].toLocaleString('ar')+'</span></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="stats-section-title">الأقسام</div><div class="stats-list">';
+    Object.keys(CATEGORY_COUNTS).forEach(function(cat){
+      html += '<div class="stats-row" data-stat-cat="'+cat+'"><span>'+cat+'</span><span class="c">'+CATEGORY_COUNTS[cat].toLocaleString('ar')+'</span></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="stats-section-title">النشاط حسب السنة</div><div class="stats-list">';
+    yearsList.forEach(function(y){
+      var cnt = YEAR_COUNTS[y];
+      var pct = maxYearCount ? (cnt / maxYearCount * 100) : 0;
+      html += '<div class="stats-bar-row" data-stat-year="'+y+'" style="cursor:pointer;">' +
+        '<span class="y">'+y+'</span>' +
+        '<span class="stats-bar-track"><span class="stats-bar-fill" style="width:'+pct+'%"></span></span>' +
+        '<span class="v">'+cnt.toLocaleString('ar')+'</span></div>';
+    });
+    html += '</div>';
+
+    statsPanel.innerHTML = html;
+    if(statsPanel.dataset.bound) return;
+    statsPanel.dataset.bound = '1';
+    statsPanel.addEventListener('click', function(e){
+      if(e.target.closest('#statsBackBtn')){ showFeedViewFromStats(); return; }
+      var typeEl = e.target.closest('[data-stat-type]');
+      var authorEl = e.target.closest('[data-stat-author]');
+      var catEl = e.target.closest('[data-stat-cat]');
+      var yearEl = e.target.closest('[data-stat-year]');
+      if(typeEl){ state.type = typeEl.getAttribute('data-stat-type'); showFeedViewFromStats(); return; }
+      if(authorEl){ state.author = authorEl.getAttribute('data-stat-author'); showFeedViewFromStats(); return; }
+      if(catEl){ state.category = catEl.getAttribute('data-stat-cat'); showFeedViewFromStats(); return; }
+      if(yearEl){ state.year = yearEl.getAttribute('data-stat-year'); showFeedViewFromStats(); return; }
+    });
+  }
+  function showStatsView(){
+    buildStatsPanel();
+    statsPanel.style.display = 'block';
+    timelineView.style.display = 'none';
+    reviewPanel.style.display = 'none';
+    reviewBtn.classList.remove('active');
+    timelineBtn.classList.remove('active');
+    feedEl.style.display = 'none';
+    loadMoreBtn.style.display = 'none';
+    if(wotdSection) wotdSection.style.display = 'none';
+    if(homeCategories) homeCategories.style.display = 'none';
+    onThisDayBanner.style.display = 'none';
+    statsBtn.classList.add('active');
+  }
+  function showFeedViewFromStats(){
+    statsPanel.style.display = 'none';
+    statsBtn.classList.remove('active');
+    state.page = 0;
+    showFeedView();
+  }
+  statsBtn.addEventListener('click', function(){
+    if(statsPanel.style.display === 'none' || !statsPanel.style.display) showStatsView();
+    else showFeedViewFromStats();
   });
 
   // ================= في مثل هذا اليوم =================
@@ -1214,8 +1354,7 @@
       '<div class="wotd-meta">' + p.type + (p.author ? ' · ' + escapeHtml(p.author) : '') + (p.date ? ' · ' + p.date : '') + '</div>' +
     '</div>';
     wotdSection.querySelector('.wotd-card').addEventListener('click', function(){
-      location.hash = 'id=' + p.id;
-      handleHashDeepLink();
+      openReadingMode(p.id, [p]);
     });
   }
 
@@ -1322,6 +1461,7 @@
         '<div class="card-footer">' +
           '<div class="footer-left">' + mediaFlag + '</div>' +
           '<div class="footer-actions">' +
+            '<button class="btn-mini" data-read="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>' +
             '<button class="'+favClass+'" data-fav="'+p.id+'"><svg viewBox="0 0 24 24" fill="'+favIconFill+'" stroke="currentColor" stroke-width="1.6"><path d="M12 17.3l-5.5 3 1.4-6-4.7-4 6.2-.5L12 4l2.6 5.8 6.2.5-4.7 4 1.4 6z"/></svg></button>' +
             '<button class="btn-mini" data-share="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg></button>' +
             '<button class="btn-mini" data-copy="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>نسخ</button>' +
@@ -1384,8 +1524,13 @@
     var favBtn = e.target.closest('[data-fav]');
     var shareBtn = e.target.closest('[data-share]');
     var moreBtn = e.target.closest('[data-more]');
+    var readBtn = e.target.closest('[data-read]');
 
-    if(copyBtn){
+    if(readBtn){
+      var idR = parseInt(readBtn.getAttribute('data-read'), 10);
+      openReadingMode(idR, currentFiltered.length ? currentFiltered : SORTED);
+      return;
+    }    if(copyBtn){
       var id1 = parseInt(copyBtn.getAttribute('data-copy'), 10);
       var post1 = ALL.find(function(p){ return p.id === id1; });
       if(!post1) return;
@@ -1442,18 +1587,90 @@
     cb();
   }
 
-  // ================= Random quote modal =================
+  // ================= وضع القراءة (Reading Mode) =================
+  // نظام النجوم: تقييم شخصي 0-5 لكل مادة، محفوظ محليًا بنفس نمط المفضلة
+  var RATING_KEY = 'kalimat_archive_ratings_v1';
+  var ratings = {};
+  try{ var ratingsRaw = localStorage.getItem(RATING_KEY); if(ratingsRaw) ratings = JSON.parse(ratingsRaw); }catch(e){ ratings = {}; }
+  ALL.forEach(function(p){ if(ratings[p.id] !== undefined) p.rating = ratings[p.id]; });
+  function setRating(id, val){
+    ratings[id] = val;
+    try{ localStorage.setItem(RATING_KEY, JSON.stringify(ratings)); }catch(e){}
+    if(ALL_BY_ID[id]) ALL_BY_ID[id].rating = val;
+  }
+
   var overlay = document.getElementById('overlay');
   var modalText = document.getElementById('modalText');
   var modalDate = document.getElementById('modalDate');
-  document.getElementById('randomBtn').addEventListener('click', function(){
-    var p = ALL[Math.floor(Math.random() * ALL.length)];
+  var modalLabel = document.getElementById('modalLabel');
+  var modalStars = document.getElementById('modalStars');
+  var modalPrevBtn = document.getElementById('modalPrevBtn');
+  var modalNextBtn = document.getElementById('modalNextBtn');
+  var readingList = []; // القائمة الحالية اللي بنتنقّل فيها (نتائج البحث الحالية، أو الأرشيف كله)
+  var readingIndex = -1;
+
+  function renderStars(id){
+    var current = (ALL_BY_ID[id] && ALL_BY_ID[id].rating) || 0;
+    var html = '';
+    for(var i=1; i<=5; i++){
+      html += '<button class="modal-star'+(i<=current ? ' on' : '')+'" data-star="'+i+'">★</button>';
+    }
+    modalStars.innerHTML = html;
+  }
+
+  function showReadingItem(idx){
+    if(idx < 0 || idx >= readingList.length) return;
+    readingIndex = idx;
+    var p = readingList[idx];
+    modalLabel.textContent = p.type + (p.author ? ' · ' + p.author : '') + (p.category && p.category !== 'عام' ? ' · ' + p.category : '');
     modalText.textContent = p.text;
+    modalText.classList.toggle('poem-mode', p.type === 'شعر');
     modalDate.textContent = formatDate(p.date);
+    renderStars(p.id);
+    modalPrevBtn.disabled = (idx <= 0);
+    modalNextBtn.disabled = (idx >= readingList.length - 1);
     overlay.classList.add('show');
+  }
+
+  function openReadingMode(id, list){
+    readingList = list || SORTED;
+    var idx = readingList.findIndex(function(p){ return p.id === id; });
+    if(idx === -1){
+      // المادة مش ضمن القائمة الحالية (مثلاً جاية من كلمة اليوم) — نفتحها لوحدها بدون تنقّل
+      var single = ALL_BY_ID[id];
+      if(!single) return;
+      readingList = [single];
+      idx = 0;
+    }
+    showReadingItem(idx);
+  }
+
+  modalStars.addEventListener('click', function(e){
+    var starBtn = e.target.closest('[data-star]');
+    if(!starBtn || readingIndex < 0) return;
+    var val = parseInt(starBtn.getAttribute('data-star'), 10);
+    var p = readingList[readingIndex];
+    // الضغط على نفس النجمة المفعّلة يلغي التقييم (0)
+    var newVal = (p.rating === val) ? 0 : val;
+    setRating(p.id, newVal);
+    renderStars(p.id);
+  });
+  modalPrevBtn.addEventListener('click', function(){ showReadingItem(readingIndex - 1); });
+  modalNextBtn.addEventListener('click', function(){ showReadingItem(readingIndex + 1); });
+
+  document.getElementById('randomBtn').addEventListener('click', function(){
+    var pool = currentFiltered.length ? currentFiltered : SORTED;
+    var p = pool[Math.floor(Math.random() * pool.length)];
+    openReadingMode(p.id, pool);
   });
   document.getElementById('modalClose').addEventListener('click', function(){ overlay.classList.remove('show'); });
   overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('show'); });
+  document.addEventListener('keydown', function(e){
+    if(!overlay.classList.contains('show')) return;
+    if(e.key === 'Escape') overlay.classList.remove('show');
+    else if(e.key === 'ArrowLeft') showReadingItem(readingIndex + 1); // RTL: يسار = التالي
+    else if(e.key === 'ArrowRight') showReadingItem(readingIndex - 1);
+  });
 
   // ================= Page watermark =================
   (function buildPageWatermark(){

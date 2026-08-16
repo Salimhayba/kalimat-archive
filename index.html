@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#241a12">
+<title>كلمات أعجبتني — الأرشيف</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="كلمات أعجبتني">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="كلمات أعجبتني — الأرشيف">
+<meta property="og:description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢ — أكثر من ٨١٠٠ تدوينة قابلة للبحث والتصفح.">
+<meta property="og:image" content="icon-512.png">
+<!-- استبدل الرابط ده برابط GitHub Pages الفعلي بعد النشر (مثال: https://salimhayba.github.io/) -->
+<meta property="og:url" content="https://salimhayba.github.io/">
+<meta property="og:locale" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="كلمات أعجبتني — الأرشيف">
+<meta name="twitter:description" content="أرشيف شخصي لما راق سالم عبدالواحد من شعر ونثر، منذ ٢٠١٢">
+<meta name="twitter:image" content="icon-512.png">
+<link rel="canonical" href="https://salimhayba.github.io/">
+<meta name="description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢، مع بحث وتصفح حسب النوع والقسم والسنة.">
+
+<style>
+  :root{
+    --parchment: #efe6d3;
+    --parchment-deep: #e6d9bd;
+    --ink: #2a1e14;
+    --ink-soft: #4a3a28;
+    --brass: #a3793f;
+    --brass-deep: #8a6230;
+    --rubric: #8c3a2e;
+    --teal: #33534a;
+    --line: rgba(42,30,20,0.16);
+    --card-shadow: 0 1px 0 rgba(42,30,20,0.06), 0 8px 24px -12px rgba(42,30,20,0.25);
+    --serif: 'Damascus', 'Al Bayan', 'Geeza Pro', 'Traditional Arabic', 'Noto Naskh Arabic', 'Arial', sans-serif;
+    --sans: -apple-system, 'Segoe UI', 'Noto Kufi Arabic', Tahoma, sans-serif;
+    --card-bg: rgba(255,253,247,0.72);
+    --glass-bg: rgba(255,253,247,0.55);
+    --glass-border: rgba(163,121,63,0.28);
+    --glass-blur: blur(16px) saturate(160%);
+  }
+  body.dark{
+    --parchment: #1a1510;
+    --parchment-deep: #241d16;
+    --ink: #e9dfc9;
+    --ink-soft: #b8a888;
+    --brass: #c9a05f;
+    --brass-deep: #dcb570;
+    --rubric: #c9695a;
+    --teal: #5f9083;
+    --line: rgba(233,223,201,0.14);
+    --card-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 8px 24px -12px rgba(0,0,0,0.6);
+    --card-bg: rgba(36,29,22,0.75);
+    --glass-bg: rgba(36,29,22,0.55);
+    --glass-border: rgba(201,160,95,0.25);
+    --glass-blur: blur(16px) saturate(160%);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0; height:100%;}
+  .loading-screen{
+    position:fixed; inset:0; z-index:100; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px;
+    background: var(--parchment); color: var(--ink);
+  }
+  body.dark .loading-screen{ background: var(--parchment); }
+  .loading-mark{ font-size: 2.2rem; color: var(--brass); animation: loadingPulse 1.4s ease-in-out infinite; }
+  .loading-text{ font-family: var(--sans); font-size: 0.85rem; color: var(--ink-soft); text-align:center; padding: 0 24px; line-height:1.8; }
+  @keyframes loadingPulse{ 0%,100%{ opacity:0.35; transform:scale(0.92); } 50%{ opacity:1; transform:scale(1.08); } }
+  @media (prefers-reduced-motion: reduce){
+    .loading-mark{ animation: none; }
+  }
+  body{
+    background: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at top right, rgba(163,121,63,0.10), transparent 55%),
+      radial-gradient(ellipse at bottom left, rgba(51,83,74,0.08), transparent 55%);
+    color: var(--ink);
+    font-family: var(--serif);
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  body::before{
+    content:"";
+    position: fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(42,30,20,0.015) 0px, rgba(42,30,20,0.015) 1px, transparent 1px, transparent 3px);
+    opacity:0.5;
+  }
+  body.dark::before{ opacity: 0.25; }
+
+  .page-watermark{ position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .page-watermark .row{
+    position: absolute; right: -20%; white-space: nowrap;
+    font-family: var(--serif); font-size: 13px; color: var(--ink);
+    opacity: 0.04; transform: rotate(-30deg); letter-spacing: 3px;
+  }
+
+  .card{ background-repeat: repeat; background-size: 70px 70px; }
+  .card.motif-شعر{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Crect x='15' y='15' width='40' height='40' fill='none' stroke='rgba(51,83,74,0.5)' stroke-width='1'/%3E%3Cpolygon points='35,5 65,35 35,65 5,35' fill='none' stroke='rgba(51,83,74,0.5)' stroke-width='1'/%3E%3C/svg%3E");
+    background-color: var(--glass-bg);
+  }
+  .card.motif-نثر{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Crect x='15' y='15' width='40' height='40' fill='none' stroke='rgba(140,58,46,0.5)' stroke-width='1'/%3E%3Cpolygon points='35,5 65,35 35,65 5,35' fill='none' stroke='rgba(140,58,46,0.5)' stroke-width='1'/%3E%3C/svg%3E");
+    background-color: var(--glass-bg);
+  }
+  .card.motif-صورة{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Crect x='15' y='15' width='40' height='40' fill='none' stroke='rgba(163,121,63,0.5)' stroke-width='1'/%3E%3Cpolygon points='35,5 65,35 35,65 5,35' fill='none' stroke='rgba(163,121,63,0.5)' stroke-width='1'/%3E%3C/svg%3E");
+    background-color: var(--glass-bg);
+  }
+  .card-watermark{
+    font-family: var(--sans); font-size: 0.6rem; color: rgba(74,58,40,0.4);
+    margin-top: 8px; text-align: center; letter-spacing: 0.3px;
+  }
+  body.dark .card-watermark{ color: rgba(233,223,201,0.3); }
+
+  .app{ position:relative; z-index:1; max-width: 720px; margin: 0 auto; padding-bottom: 96px; }
+
+  header.colophon{ padding: 30px 20px 20px; text-align:center; position: relative; }
+  .seal{
+    width: 74px; height:74px; margin: 0 auto 12px;
+    border: 1.5px solid var(--brass); border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    position: relative; color: var(--rubric); font-family: var(--serif);
+  }
+  .seal::before{ content:""; position:absolute; inset:6px; border-radius:50%; border: 1px solid rgba(163,121,63,0.45); }
+  .seal svg{ width: 34px; height:34px; }
+  h1.title{ font-size: 1.9rem; margin: 4px 0 2px; font-weight: 700; letter-spacing: 0.5px; color: var(--ink); }
+  .subtitle{ font-family: var(--sans); font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 0.3px; margin-bottom: 4px; }
+  .byline{ font-family: var(--sans); font-size: 0.72rem; color: var(--brass-deep); margin-top: 2px; }
+  header.colophon::after{
+    content:""; display:block; width: 120px; height:1px; margin: 18px auto 0;
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+  }
+  .theme-toggle{
+    position:absolute; top: 18px; left: 16px;
+    width:36px; height:36px; border-radius:50%;
+    border: 1px solid var(--line); background: rgba(255,255,255,0.06);
+    color: var(--ink-soft); display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .theme-toggle svg{ width:17px; height:17px; }
+
+  .controls{
+    padding: 16px 16px 8px; position: sticky; top:0; z-index: 10;
+    background: linear-gradient(180deg, var(--glass-bg) 78%, rgba(239,230,211,0));
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  }
+  .search-row{ display:flex; gap:8px; align-items:center; }
+  .search-box{
+    flex:1; display:flex; align-items:center; gap:8px;
+    background: rgba(255,252,244,0.7); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px;
+  }
+  body.dark .search-box{ background: rgba(255,255,255,0.05); }
+  .search-box svg{ width:16px; height:16px; color: var(--ink-soft); flex-shrink:0; }
+  .search-box input{
+    border:none; background:transparent; outline:none;
+    font-family: var(--sans); font-size: 0.95rem; color: var(--ink); width: 100%;
+  }
+  .search-box input::placeholder{ color: rgba(74,58,40,0.55); }
+  .icon-btn{
+    flex-shrink:0; width:42px; height:42px; border-radius:12px;
+    border: 1px solid var(--brass); background: rgba(163,121,63,0.08); color: var(--brass-deep);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .icon-btn svg{ width:19px; height:19px; }
+  .icon-btn:active{ transform: scale(0.94); }
+  .icon-btn.active-fav{ background: var(--rubric); border-color: var(--rubric); color: var(--parchment); }
+  #timelineBtn.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
+
+  .type-tabs{ display:flex; gap:8px; padding: 12px 4px 2px; }
+  .type-tab{
+    flex:1; text-align:center; font-family: var(--serif); font-size: 0.98rem; font-weight: 700;
+    padding: 9px 6px; border-radius: 10px; border: 1px solid var(--line);
+    background: rgba(255,252,244,0.4); color: var(--ink-soft); cursor:pointer;
+  }
+  body.dark .type-tab{ background: rgba(255,255,255,0.04); }
+  .type-tab .n{ font-family: var(--sans); font-weight:400; font-size:0.68rem; display:block; margin-top:1px; opacity:0.75; }
+  .type-tab.active{ background: var(--ink); color: var(--parchment); border-color: var(--ink); }
+  .type-tab.active[data-type="شعر"]{ background: var(--teal); border-color: var(--teal); }
+  .type-tab.active[data-type="نثر"]{ background: var(--rubric); border-color: var(--rubric); }
+  .type-tab.active[data-type="fav"]{ background: var(--rubric); border-color: var(--rubric); }
+
+  .cat-rail, .year-rail, .author-rail{
+    display:flex; gap:6px; overflow-x:auto; padding: 8px 4px 2px;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  .cat-rail::-webkit-scrollbar, .year-rail::-webkit-scrollbar, .author-rail::-webkit-scrollbar{ display:none; }
+  .cat-chip, .author-chip{
+    flex-shrink:0; font-family: var(--sans); font-size: 0.73rem; padding: 6px 12px; border-radius: 999px;
+    border: 1px dashed var(--brass); background: rgba(163,121,63,0.06); color: var(--brass-deep); cursor:pointer; white-space:nowrap;
+  }
+  .cat-chip.active, .author-chip.active{ background: var(--brass); color: var(--parchment); border-style: solid; }
+  .year-chip{
+    flex-shrink:0; font-family: var(--sans); font-size: 0.76rem; padding: 6px 13px; border-radius: 999px;
+    border: 1px solid var(--line); background: rgba(255,252,244,0.5); color: var(--ink-soft); cursor:pointer; white-space:nowrap;
+  }
+  body.dark .year-chip{ background: rgba(255,255,255,0.04); }
+  .year-chip.active{ background: var(--ink); color: var(--parchment); border-color: var(--ink); }
+
+  .stats-line{
+    font-family: var(--sans); font-size: 0.72rem; color: var(--ink-soft);
+    padding: 10px 4px 2px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .dup-toggle{
+    font-family: var(--sans); font-size: 0.68rem; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--line); background: transparent; color: var(--ink-soft); cursor:pointer; white-space:nowrap;
+  }
+  .dup-toggle.active{ background: var(--brass); color: var(--parchment); border-color: var(--brass); }
+  .authors-toggle-btn.active{ background: var(--brass); color: var(--parchment); border-color: var(--brass); }
+  .tag-author{ background: rgba(163,121,63,0.12); color: var(--brass-deep); }
+  .timeline-view{ padding: 10px 4px 20px; display:flex; flex-direction:column; gap:10px; }
+  .timeline-card{
+    border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px 16px;
+    background: var(--glass-bg); cursor:pointer; transition: border-color .15s;
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  }
+  .timeline-card:active{ border-color: var(--brass); }
+  .timeline-year{ font-family: var(--serif); font-size: 1.3rem; color: var(--ink); font-weight:700; }
+  .timeline-count{ font-family: var(--sans); font-size: 0.72rem; color: var(--ink-soft); margin-inline-start: 8px; }
+  .timeline-bar{ display:flex; height:7px; border-radius:4px; overflow:hidden; margin-top:8px; background: var(--line); }
+  .timeline-bar span{ height:100%; }
+  .timeline-bar .b-poetry{ background: var(--brass); }
+  .timeline-bar .b-prose{ background: var(--ink-soft); }
+  .timeline-bar .b-image{ background: var(--line); }
+  .timeline-meta{ font-family: var(--sans); font-size: 0.7rem; color: var(--ink-soft); margin-top:8px; display:flex; gap:12px; flex-wrap:wrap; }
+  .timeline-back{
+    font-family: var(--sans); font-size: 0.75rem; padding: 8px 14px; border-radius: 8px;
+    border: 1px solid var(--brass); background: transparent; color: var(--brass-deep); cursor:pointer; margin: 4px 4px 10px;
+  }
+  #reviewBtn.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
+  .review-panel{ padding: 10px 4px 24px; }
+  .review-progress{ font-family: var(--sans); font-size: 0.72rem; color: var(--ink-soft); padding: 4px 4px 10px; }
+  .review-card{
+    border: 1px solid var(--glass-border); border-radius: 12px; padding: 18px 16px; background: var(--glass-bg);
+    box-shadow: var(--card-shadow);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  }
+  .review-text{ font-family: var(--serif); font-size: 1.05rem; line-height: 1.9; color: var(--ink); white-space: pre-line; margin-bottom: 14px; }
+  .review-current-cat{ font-family: var(--sans); font-size: 0.72rem; color: var(--ink-soft); margin-bottom: 10px; }
+  .review-select{
+    width: 100%; font-family: var(--sans); font-size: 0.85rem; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--brass); background: var(--parchment); color: var(--ink); margin-bottom: 12px;
+  }
+  body.dark .review-select{ background: var(--parchment-deep); }
+  .review-actions{ display:flex; gap: 8px; }
+  .review-save, .review-skip{
+    flex:1; font-family: var(--sans); font-size: 0.82rem; padding: 10px; border-radius: 8px; border: none; cursor:pointer;
+  }
+  .review-save{ background: var(--brass); color: var(--parchment); }
+  .review-skip{ background: transparent; border: 1px solid var(--line); color: var(--ink-soft); }
+  .review-empty{ font-family: var(--sans); font-size: 0.85rem; color: var(--ink-soft); text-align:center; padding: 30px 10px; }
+  .on-this-day{ margin: 4px 4px 12px; }
+  .otd-banner{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px 14px; cursor:pointer;
+    font-family: var(--sans); font-size: 0.78rem; color: var(--brass-deep); background: var(--glass-bg);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  }
+  .otd-banner.active{ background: var(--brass); color: var(--parchment); border-style:solid; }
+  .wotd-section{ margin: 4px 4px 16px; }
+  .wotd-card{
+    position: relative; border: 1px solid var(--glass-border); border-radius: 6px 18px 6px 18px;
+    padding: 22px 20px 18px; background: var(--glass-bg); box-shadow: var(--card-shadow);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  }
+  .wotd-label{
+    font-family: var(--sans); font-size: 0.68rem; color: var(--brass-deep); font-weight:700;
+    letter-spacing: 0.4px; margin-bottom: 10px; display:flex; align-items:center; gap:6px;
+  }
+  .wotd-text{ font-family: var(--serif); font-size: 1.15rem; line-height: 1.95; color: var(--ink); white-space: pre-line; }
+  .wotd-meta{ font-family: var(--sans); font-size: 0.7rem; color: var(--ink-soft); margin-top: 10px; }
+  .home-categories{ margin: 0 4px 16px; }
+  .home-cat-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .home-cat-tile{
+    border: 1px solid var(--glass-border); border-radius: 10px; padding: 12px 14px; cursor:pointer;
+    background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    font-family: var(--sans);
+  }
+  .home-cat-tile .n{ font-size: 0.95rem; color: var(--ink); font-weight:600; }
+  .home-cat-tile .c{ font-size: 0.68rem; color: var(--ink-soft); margin-top:3px; }
+
+  .feed{ padding: 10px 16px 0; }
+  .empty-state{ text-align:center; padding: 60px 20px; color: var(--ink-soft); font-family: var(--sans); font-size:0.9rem; }
+
+  .card{
+    position: relative; border: 1px solid var(--glass-border); border-radius: 4px 14px 4px 14px;
+    padding: 18px 20px 16px; margin-bottom: 16px; box-shadow: var(--card-shadow);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  }
+  .card::before{
+    content:""; position:absolute; top:-1px; right:-1px; width: 26px; height:26px;
+    border-top: 2px solid var(--brass); border-right: 2px solid var(--brass);
+    border-radius: 4px 14px 0 0; opacity:0.65;
+  }
+  .card-date{
+    font-family: var(--sans); font-size: 0.68rem; color: var(--rubric); font-weight:600;
+    margin-bottom: 8px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  }
+  .card-date .dot{ width:4px; height:4px; border-radius:50%; background: var(--rubric); flex-shrink:0; }
+  .hijri{ font-weight:400; opacity:0.75; }
+  .tag{ font-family: var(--sans); font-weight:600; font-size: 0.63rem; padding: 2px 8px; border-radius: 999px; }
+  .tag-poetry{ background: rgba(51,83,74,0.14); color: var(--teal); }
+  .tag-prose{ background: rgba(140,58,46,0.12); color: var(--rubric); }
+  .tag-image{ background: rgba(74,58,40,0.12); color: var(--ink-soft); }
+  .tag-cat{ background: rgba(163,121,63,0.16); color: var(--brass-deep); }
+
+  .card-text{
+    font-size: 1.12rem; line-height: 2; white-space: pre-wrap; word-break: break-word; color: var(--ink);
+    position: relative;
+  }
+  .card-text.clamped{ max-height: 8.6em; overflow: hidden; }
+  .card-text.clamped::after{
+    content:""; position:absolute; bottom:0; right:0; left:0; height: 2.6em;
+    background: linear-gradient(180deg, transparent, var(--card-bg) 85%);
+    pointer-events:none;
+  }
+  .card-text mark{ background: rgba(163,121,63,0.28); color: inherit; border-radius: 2px; }
+
+  .read-more-btn{
+    display:block; margin-top: 8px; font-family: var(--sans); font-size: 0.76rem; font-weight:600;
+    color: var(--brass-deep); background:none; border:none; cursor:pointer; padding: 2px 0;
+  }
+
+  .card-footer{
+    display:flex; justify-content: space-between; align-items:center; margin-top: 12px; padding-top: 10px;
+    border-top: 1px dashed var(--line);
+  }
+  .footer-left{ display:flex; align-items:center; gap:10px; }
+  .media-flag{ font-family: var(--sans); font-size: 0.68rem; color: var(--teal); display:flex; align-items:center; gap:4px; }
+  .media-flag svg{ width:13px; height:13px; }
+  .footer-actions{ display:flex; align-items:center; gap:4px; }
+  .btn-mini{
+    font-family: var(--sans); font-size: 0.68rem; color: var(--ink-soft); background:none; border:none; cursor:pointer;
+    display:flex; align-items:center; gap:4px; padding:4px 6px;
+  }
+  .btn-mini svg{ width:13px; height:13px; }
+  .btn-mini.copied{ color: var(--teal); }
+  .btn-mini.fav-on{ color: var(--rubric); }
+  .btn-mini.fav-on svg{ fill: var(--rubric); }
+
+  .load-more{
+    display:block; width: 100%; margin: 6px 0 20px; padding: 12px; font-family: var(--sans); font-size: 0.85rem;
+    background: transparent; border: 1px solid var(--brass); color: var(--brass-deep); border-radius: 12px; cursor: pointer;
+  }
+  .load-more:active{ background: rgba(163,121,63,0.08); }
+
+  .overlay{
+    position: fixed; inset:0; background: rgba(20,14,8,0.55); display:none; align-items:center; justify-content:center;
+    z-index:50; padding: 24px;
+  }
+  .overlay.show{ display:flex; }
+  .modal{
+    background: var(--parchment-deep); border-radius: 6px 20px 6px 20px; padding: 26px 22px 20px;
+    max-width: 480px; width:100%; max-height: 76vh; overflow-y:auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--brass); position: relative;
+  }
+  .modal-close{
+    position:absolute; top:12px; left:12px; width:28px; height:28px; border-radius:50%;
+    background: rgba(42,30,20,0.08); border:none; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color: var(--ink-soft);
+  }
+  .modal-close svg{ width:14px; height:14px; }
+  .modal-label{ font-family: var(--sans); font-size: 0.7rem; color: var(--rubric); text-align:center; margin-bottom: 10px; letter-spacing:0.5px; }
+  .modal-text{ font-size: 1.2rem; line-height: 2.1; text-align:center; white-space: pre-wrap; }
+  .modal-date{ font-family: var(--sans); font-size: 0.7rem; color: var(--ink-soft); text-align:center; margin-top:14px; }
+
+  footer.app-footer{ text-align:center; padding: 20px 16px 40px; font-family: var(--sans); font-size: 0.68rem; color: var(--ink-soft); }
+
+  .toast{
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--parchment); font-family: var(--sans); font-size: 0.8rem;
+    padding: 10px 18px; border-radius: 10px; z-index: 60; opacity: 0; pointer-events:none;
+    transition: opacity 0.25s ease, transform 0.25s ease; max-width: 85%; text-align:center;
+  }
+  .toast.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .card.highlighted{ outline: 2px solid var(--brass); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: no-preference){
+    .card{ animation: rise 0.25s ease both; }
+    @keyframes rise{ from{ opacity:0; transform: translateY(6px);} to{opacity:1; transform:none;} }
+  }
+
+  /* ---------- Print stylesheet (دفتر أنيق للطباعة) ---------- */
+  @media print{
+    @page{ margin: 1.8cm 1.5cm; }
+    body{ background:#fff !important; color:#111 !important; }
+    body::before, .page-watermark, .controls, .theme-toggle,
+    .load-more, .overlay, .toast, .footer-actions, .media-flag,
+    .read-more-btn, .header .subtitle{ display:none !important; }
+    .app{ max-width:100%; padding-bottom:0; }
+    header.colophon{ padding: 0 0 14px; border-bottom: 1px solid #ccc; margin-bottom: 18px; }
+    header.colophon::after{ display:none; }
+    .seal{ border-color:#333; color:#333; }
+    h1.title{ color:#111; }
+    .byline, .subtitle{ color:#555; }
+    .card{
+      break-inside: avoid; page-break-inside: avoid;
+      box-shadow:none !important; border:1px solid #ccc !important;
+      background:#fff !important; background-image:none !important;
+      margin-bottom: 14px; padding: 12px 16px;
+    }
+    .card::before{ border-color:#999; }
+    .card-date{ color:#8c3a2e !important; }
+    .card-text{ color:#111 !important; }
+    .card-text.clamped{ max-height:none !important; overflow:visible !important; }
+    .card-text.clamped::after{ display:none !important; }
+    .card-watermark{ color:#999 !important; }
+    .tag-poetry{ background:#eee !important; color:#333 !important; }
+    .tag-prose{ background:#eee !important; color:#333 !important; }
+    .tag-cat{ background:#eee !important; color:#333 !important; }
+    footer.app-footer{ color:#555; }
+  }
+</style>
+</head>
+<body>
+<div class="page-watermark" id="pageWatermark" aria-hidden="true"></div>
+<div class="app">
+
+  <header class="colophon">
+    <button class="theme-toggle" id="themeToggle" aria-label="الوضع الليلي">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+    </button>
+    <div class="seal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <path d="M12 3 L14 9 L20 9 L15 13 L17 19 L12 15.5 L7 19 L9 13 L4 9 L10 9 Z"/>
+      </svg>
+    </div>
+    <h1 class="title">كلمات أعجبتني</h1>
+    <div class="subtitle">أرشيف شخصي لما راقني من شعر ونثر</div>
+    <div class="byline">سالم عبدالواحد · منذ ٢٠١٢</div>
+  </header>
+
+  <div class="controls">
+    <div class="search-row">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="searchInput" type="search" placeholder="ابحث في الكلمات…" autocomplete="off">
+      </div>
+      <button class="icon-btn" id="randomBtn" aria-label="كلمة عشوائية">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><circle cx="6.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/><circle cx="17.5" cy="17.5" r="0.8" fill="currentColor" stroke="none"/><path d="M10 14 L14 10"/></svg>
+      </button>
+      <button class="icon-btn" id="importBtn" aria-label="استيراد تحديثات">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+      </button>
+      <button class="icon-btn" id="exportBtn" aria-label="تصدير نسخة محدثة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21V9"/><path d="M7 14l5-5 5 5"/><path d="M4 5h16"/></svg>
+      </button>
+      <button class="icon-btn authors-toggle-btn" id="authorsToggleBtn" aria-label="تصفية بالمؤلف">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+      </button>
+      <button class="icon-btn" id="timelineBtn" aria-label="رحلتي مع الكلمة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10"/><path d="M4 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 20V13"/><path d="M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M20 20V6"/><path d="M20 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
+      </button>
+      <button class="icon-btn" id="reviewBtn" aria-label="مراجعة التصنيف">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+      </button>
+      <input type="file" id="importFile" accept=".json" multiple style="display:none;">
+    </div>
+    <div class="type-tabs" id="typeTabs"></div>
+    <div class="cat-rail" id="catRail"></div>
+    <div class="author-rail" id="authorRail" style="display:none;"></div>
+
+    <div class="stats-line">
+      <span id="statsText">—</span>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <button class="dup-toggle" id="dupToggle">إخفاء المكرر</button>
+        <span id="statsFiltered" aria-live="polite"></span>
+      </span>
+    </div>
+    <div class="year-rail" id="yearRail"></div>
+  </div>
+
+  <div class="timeline-view" id="timelineView" style="display:none;"></div>
+  <div class="review-panel" id="reviewPanel" style="display:none;"></div>
+  <div class="wotd-section" id="wotdSection" style="display:none;"></div>
+  <div class="home-categories" id="homeCategories" style="display:none;"></div>
+  <div class="on-this-day" id="onThisDayBanner" style="display:none;"></div>
+  <div class="feed" id="feed"></div>
+  <button class="load-more" id="loadMoreBtn" style="display:none;">تحميل المزيد</button>
+
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-label">كلمة اليوم</div>
+    <div class="modal-text" id="modalText"></div>
+    <div class="modal-date" id="modalDate"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-mark">✦</div>
+  <div class="loading-text">جاري تحميل الأرشيف…</div>
+</div>
+
+<footer class="app-footer">أرشيف أوفلاين · %%COUNT%% تدوينة · © سالم عبدالواحد</footer>
+
+<script>
+(async function(){
+  "use strict";
+  // ================= تحميل البيانات (مقسّمة حسب السنة) =================
+  // كل سنة في ملف JSON منفصل (بجانب index.html مباشرة) بدل ملف data.js واحد ضخم — يسمح بتحميل متوازٍ أسرع،
+  // وبكاش HTTP لكل سنة على حدة (تعديل سنة واحدة مستقبلًا لا يُبطل كاش باقي السنوات).
+  async function loadArchiveData(){
+    var metaResp = await fetch('meta.json');
+    if(!metaResp.ok) throw new Error('meta.json fetch failed: ' + metaResp.status);
+    var meta = await metaResp.json();
+    var yearResults = await Promise.all(meta.years.map(function(y){
+      return fetch(y + '.json').then(function(r){
+        if(!r.ok) throw new Error(y + '.json fetch failed: ' + r.status);
+        return r.json();
+      });
+    }));
+    var allPosts = [];
+    yearResults.forEach(function(arr){ allPosts = allPosts.concat(arr); });
+    window.ARCHIVE_DATA = allPosts;
+    window.ARCHIVE_YEAR_COUNTS = meta.yearCounts;
+    window.ARCHIVE_TYPE_COUNTS = meta.typeCounts;
+    window.ARCHIVE_CATEGORY_COUNTS = meta.categoryCounts;
+    window.ARCHIVE_TOTAL = meta.total;
+  }
+  var loadingScreen = document.getElementById('loadingScreen');
+  try{
+    await loadArchiveData();
+  }catch(err){
+    // فشل التحميل (مثلاً فتح الملف مباشرة من القرص بدل خادم فعلي — fetch() ما بيشتغلش مع file://)
+    loadingScreen.innerHTML = '<div class="loading-text">تعذّر تحميل بيانات الأرشيف.<br>هذا التطبيق يحتاج لخادم فعلي (مثل GitHub Pages) ولا يعمل بفتح الملف مباشرة من القرص.</div>';
+    return;
+  }
+  loadingScreen.style.display = 'none';
+
+  var BASE_DATA = window.ARCHIVE_DATA || [];
+  var STORAGE_KEY = 'kalimat_archive_extra_posts_v1';
+  var FAV_KEY = 'kalimat_archive_favorites_v1';
+  var THEME_KEY = 'kalimat_archive_theme_v1';
+  var COPYRIGHT_TEXT = '© سالم عبدالواحد — أرشيف كلمات أعجبتني';
+
+  // ================= Mojibake fix + cleaning (for imports) =================
+  function fixMojibake(str){
+    if(typeof str !== 'string') return str;
+    try{
+      var bytes = new Uint8Array(str.length);
+      for(var i=0;i<str.length;i++){
+        var code = str.charCodeAt(i);
+        if(code > 255) return str;
+        bytes[i] = code;
+      }
+      return new TextDecoder('utf-8', {fatal:true}).decode(bytes);
+    }catch(e){ return str; }
+  }
+  function cleanInvisibles(text){
+    var strip = /[\u200e\u200f\u200b\u2066\u2067\u2068\u2069\u202a\u202b\u202c\u202d\u202e\ufeff\u2063\u2060\u200c\u200d\u061c]/g;
+    return text.replace(strip, '').replace(/\n{3,}/g, '\n\n').trim();
+  }
+  function extractTagsAndClean(text){
+    var tags = text.match(/#\S+/g) || [];
+    var tagsClean = [];
+    tags.forEach(function(t){
+      var t2 = t.replace(/[.,،؛:!؟"'\)\]]+$/,'');
+      if(t2 && tagsClean.indexOf(t2) === -1) tagsClean.push(t2);
+    });
+    var cleaned = text.replace(/#\S+/g, '');
+    cleaned = cleaned.split('\n').map(function(l){ return l.replace(/[ \t]+$/,''); }).join('\n');
+    cleaned = cleaned.replace(/\n{3,}/g, '\n\n').trim();
+    return {cleaned: cleaned, tags: tagsClean};
+  }
+
+  // ================= Type + category classifiers =================
+  var RELIGIOUS_PROSE_MARKERS = ['رحمه الله','رضي الله','صلى الله عليه وسلم','تفسير','حدثنا',
+    'عن أبي','عن ابن','روى','رواه','سورة','حديث','أخرجه','قال ابن','قال الشيخ',
+    'فتوى','السلف','ابن القيم','ابن تيمية','ابن عثيمين','رحمها الله'];
+  var POETRY_MARKERS = ['قصيدة','أبيات','بيت شعر','يقول الشاعر','شعرا ','ديوان','شاعر'];
+  var PROSE_LABEL_MARKERS = ['خاطرة','قصة قصيرة','مقالة','مقال '];
+  var PROSE_NARRATIVE = ['قال:','قالت:','يقول:','سُئل','سئل ','من عقوبات','من علامات','من صفات'];
+  var CATEGORIES = {
+    'حب وغزل': ['حب','أحب','الحبيب','حبيبي','حبيبتي','عشق','العشق','غرام','وله','غزل','وصال','عيناك','أهواك','محبوب','أعشقك','أحبك','يا حبيب'],
+    'رثاء وفراق': ['فقدت','فقدنا','الفقيد','رحيله','رحيلك','توفي','وفاته','عزائي','العزاء','القبر','الموت','موتي','فراقك','غيابك','رثاء','يرثي','الرثاء','دفنته','مقبرة','نعشه','فقدان','الحداد','مأتم'],
+    'إيمانيات ودعاء': ['الله','اللهم','القرآن','الدعاء','ادعُ','الصلاة','الإيمان','رسول الله','صلى الله عليه وسلم','سبحان','استغفار','تقوى','الجنة','النار','التوبة','ذنب','الذنوب','العبادة','رمضان','الصيام','الحج','سورة','آية','حديث','رواه','أخرجه'],
+    'حكمة وتأمل': ['الحياة','الدنيا','العمر','الزمن','النفس','التجربة','عبرة','حكمة','التفكير','الوعي','الإنسان','العقل','يعلمنا','درس','دروس'],
+    'أخلاق وسلوك': ['الصديق','الصداقة','الوفاء','الأخلاق','الصدق','الكرم','الصبر','التسامح','التواضع','العفو','الأمانة','الرفق','حسن الخلق','الحجاب','العفاف','الحياء'],
+    'وطن وانتماء': ['الوطن','وطني','بلادي','ديرتي','الغربة','المهجر','فلسطين','غزة','القدس','العروبة','الأمة']
+  };
+  var CAT_PRIORITY = ['حب وغزل','رثاء وفراق','إيمانيات ودعاء','أخلاق وسلوك','وطن وانتماء','حكمة وتأمل'];
+  var PROSE_NARRATIVE_HINT = ['قال:','قالت:','حدثنا','عن أبي','شكا رجل','سُئل','سئل '];
+  var TASHKEEL_RE = /[\u064B-\u0652\u0670]/g;
+  var AR_LETTER_RE = /[\u0621-\u064A]/g;
+
+  function countOccurrences(text, sub){
+    if(!sub) return 0;
+    var n=0, i=0;
+    while((i = text.indexOf(sub, i)) !== -1){ n++; i += sub.length; }
+    return n;
+  }
+  function stripHashtagLines(text){
+    return text.split('\n').map(function(l){return l.trim();}).filter(function(l){ return !!l; });
+  }
+  function classifyType(text, bodyLines){
+    if(!bodyLines.length) return 'صورة';
+    var nLines = bodyLines.length;
+    var avgLen = bodyLines.reduce(function(a,l){return a+l.length;},0) / nLines;
+    var letters = (text.match(AR_LETTER_RE)||[]).length;
+    var diac = (text.match(TASHKEEL_RE)||[]).length;
+    var diacDensity = diac / Math.max(1, letters);
+    var score = 0;
+    if(nLines >= 4 && avgLen < 45) score += 2;
+    if(nLines >= 6 && avgLen < 35) score += 1;
+    if(diacDensity > 0.12) score += 3;
+    else if(diacDensity > 0.05) score += 1;
+    var last = bodyLines[bodyLines.length-1];
+    var words = last.split(/\s+/).filter(Boolean);
+    var hasPunct = /[،.:؛"”“?؟!]/.test(last);
+    var hasReligious = RELIGIOUS_PROSE_MARKERS.some(function(m){return last.indexOf(m)!==-1;});
+    if(words.length>=1 && words.length<=5 && !hasPunct && !hasReligious && !/\d/.test(last)) score += 1;
+    POETRY_MARKERS.forEach(function(m){ if(text.indexOf(m)!==-1) score += 2; });
+    RELIGIOUS_PROSE_MARKERS.forEach(function(m){ if(text.indexOf(m)!==-1) score -= 3; });
+    PROSE_LABEL_MARKERS.forEach(function(m){ if(text.indexOf(m)!==-1) score -= 4; });
+    PROSE_NARRATIVE.forEach(function(m){ if(text.indexOf(m)!==-1) score -= 2; });
+    if(nLines <= 2 && avgLen > 80) score -= 2;
+    return score >= 4 ? 'شعر' : 'نثر';
+  }
+  function classifyCategory(bodyLines, tags){
+    var body = bodyLines.join('\n') + ' ' + (tags||[]).map(function(t){ return t.replace(/^#/,'').replace(/_/g,' '); }).join(' ');
+    if(!bodyLines.join('').trim()) return 'صورة بلا نص';
+    var scores = {}, bestCat=null, bestScore=-1;
+    Object.keys(CATEGORIES).forEach(function(cat){
+      var s = CATEGORIES[cat].reduce(function(acc,kw){ return acc + countOccurrences(body, kw); }, 0);
+      scores[cat] = s;
+    });
+    Object.keys(scores).forEach(function(c){ if(scores[c] > bestScore){ bestScore = scores[c]; bestCat = c; } });
+    if(bestScore === 0){
+      if(PROSE_NARRATIVE_HINT.some(function(h){ return body.indexOf(h) !== -1; })) return 'حكايا ومواقف';
+      return 'عام';
+    }
+    var ties = Object.keys(scores).filter(function(c){ return scores[c] === bestScore; });
+    for(var i=0;i<CAT_PRIORITY.length;i++){ if(ties.indexOf(CAT_PRIORITY[i]) !== -1) return CAT_PRIORITY[i]; }
+    return bestCat;
+  }
+  function toDateStr(ts){
+    var d = new Date(ts*1000);
+    var pad = function(n){ return (n<10?'0':'')+n; };
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  }
+  function parseFacebookExport(json){
+    var out = [];
+    if(!Array.isArray(json)) return out;
+    json.forEach(function(rec){
+      var ts = rec.timestamp;
+      var matchedText = null;
+      (rec.data || []).forEach(function(d){
+        if(d && typeof d === 'object' && 'post' in d){
+          var text = fixMojibake(d.post);
+          if(text.indexOf('أعجبتني') !== -1) matchedText = text;
+        }
+      });
+      if(matchedText === null) return;
+      var mediaUri = null;
+      (rec.attachments || []).forEach(function(att){
+        (att.data || []).forEach(function(ad){
+          if(ad && ad.media && ad.media.uri) mediaUri = fixMojibake(ad.media.uri);
+        });
+      });
+      var cleaned0 = cleanInvisibles(matchedText);
+      var extracted = extractTagsAndClean(cleaned0);
+      var bodyLines = stripHashtagLines(extracted.cleaned);
+      out.push({
+        ts: ts,
+        date: ts ? toDateStr(ts) : null,
+        text: extracted.cleaned,
+        tags: extracted.tags,
+        media: mediaUri,
+        type: classifyType(extracted.cleaned, bodyLines),
+        category: classifyCategory(bodyLines, extracted.tags)
+      });
+    });
+    return out;
+  }
+
+  // ================= Arabic search normalization =================
+  function normalizeChar(ch){
+    if(/[إأآا]/.test(ch)) return 'ا';
+    if(ch === 'ى') return 'ي';
+    if(ch === 'ؤ') return 'و';
+    if(ch === 'ئ') return 'ي';
+    if(ch === 'ة') return 'ه';
+    return ch.toLowerCase();
+  }
+  var SKIP_RE = /[\u064B-\u0652\u0670\u0640]/;
+  function buildNormMap(original){
+    var norm = '', map = [];
+    for(var i=0;i<original.length;i++){
+      var ch = original[i];
+      if(SKIP_RE.test(ch)) continue;
+      norm += normalizeChar(ch);
+      map.push(i);
+    }
+    return {norm: norm, map: map};
+  }
+  function normalizeQuery(q){
+    var out = '';
+    for(var i=0;i<q.length;i++){
+      var ch = q[i];
+      if(SKIP_RE.test(ch)) continue;
+      out += normalizeChar(ch);
+    }
+    return out;
+  }
+  function findAllSpans(norm, map, nq){
+    var spans = [];
+    if(!nq) return spans;
+    var i = 0;
+    while(true){
+      var idx = norm.indexOf(nq, i);
+      if(idx === -1) break;
+      var startOrig = map[idx];
+      var endIdxInNorm = idx + nq.length - 1;
+      var endOrig = (endIdxInNorm < map.length - 1) ? map[endIdxInNorm+1] : (map[endIdxInNorm]+1);
+      spans.push([startOrig, endOrig]);
+      i = idx + nq.length;
+    }
+    return spans;
+  }
+
+  // ================= Hijri date (tabular/Kuwaiti algorithm, approximate) =================
+  var HIJRI_MONTHS = ['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+  function gregorianToHijri(y, m, d){
+    var jd = Math.floor((1461*(y + 4800 + Math.floor((m-14)/12)))/4)
+           + Math.floor((367*(m-2-12*Math.floor((m-14)/12)))/12)
+           - Math.floor((3*Math.floor((y+4900+Math.floor((m-14)/12))/100))/4)
+           + d - 32075;
+    var l = jd - 1948440 + 10632;
+    var n = Math.floor((l-1)/10631);
+    l = l - 10631*n + 354;
+    var j = (Math.floor((10985-l)/5316))*(Math.floor((50*l)/17719)) + (Math.floor(l/5670))*(Math.floor((43*l)/15238));
+    l = l - (Math.floor((30-j)/15))*(Math.floor((17719*j)/50)) - (Math.floor(j/16))*(Math.floor((15238*j)/43)) + 29;
+    var hMonth = Math.floor((24*l)/709);
+    var hDay = l - Math.floor((709*hMonth)/24);
+    var hYear = 30*n + j - 30;
+    return {year: hYear, month: hMonth, day: hDay};
+  }
+  function hijriLabel(iso){
+    if(!iso) return '';
+    var parts = iso.split('-').map(Number);
+    var h = gregorianToHijri(parts[0], parts[1], parts[2]);
+    if(h.month < 1 || h.month > 12) return '';
+    return h.day + ' ' + HIJRI_MONTHS[h.month-1] + ' ' + h.year + 'هـ';
+  }
+
+  // ================= Data load + merge =================
+  var extraPosts = [];
+  try{ var raw = localStorage.getItem(STORAGE_KEY); if(raw) extraPosts = JSON.parse(raw); }catch(e){ extraPosts = []; }
+  var existingTs = {};
+  BASE_DATA.forEach(function(p){ if(p.ts) existingTs[p.ts] = true; });
+  // احتفظ بالـ id المخزّن مع كل منشور مستورد كما هو — لا تعيد ترقيمه عند كل تحميل صفحة،
+  // حتى لا تنكسر روابط المشاركة (#id=) والمفضّلة المرتبطة به
+  extraPosts = extraPosts.filter(function(p){ return p.ts && !existingTs[p.ts] && p.id; });
+  var ALL = BASE_DATA.concat(extraPosts);
+  // nextId يُحسب من أقصى id عبر البيانات كلها (الأساسية + المستوردة) لضمان عدم التصادم
+  // عند إضافة منشورات جديدة لاحقًا عبر الاستيراد
+  var nextId = ALL.reduce(function(m,p){ return Math.max(m, p.id||0); }, 0) + 1;
+
+  ALL.forEach(function(p){
+    var nm = buildNormMap(p.text || '');
+    p._norm = nm.norm; p._map = nm.map;
+    // فهرس بحث إضافي للوسوم (بدون خرائط مواضع — يُستخدم للفلترة فقط، لا للتظليل)
+    p._normTags = normalizeQuery((p.tags||[]).map(function(t){ return t.replace(/^#/,'').replace(/_/g,' '); }).join(' '));
+  });
+
+  // ================= مراجعة التصنيف: تحميل القرارات المحفوظة محليًا وتطبيقها =================
+  var REVIEW_KEY = 'kalimat_category_reviews_v1';
+  var categoryReviews = {};
+  try{ var revRaw = localStorage.getItem(REVIEW_KEY); if(revRaw) categoryReviews = JSON.parse(revRaw); }catch(e){ categoryReviews = {}; }
+  var ALL_BY_ID = {};
+  ALL.forEach(function(p){
+    ALL_BY_ID[p.id] = p;
+    var rev = categoryReviews[p.id];
+    if(rev){ p.category_revised = rev.category_revised; p.type_revised = rev.type_revised; p.review_status = rev.review_status; }
+  });
+  function saveCategoryReview(id, categoryRevised, typeRevised){
+    var existing = categoryReviews[id] || {};
+    if(categoryRevised) existing.category_revised = categoryRevised;
+    if(typeRevised) existing.type_revised = typeRevised;
+    existing.review_status = 'مراجعة التصنيف';
+    categoryReviews[id] = existing;
+    try{ localStorage.setItem(REVIEW_KEY, JSON.stringify(categoryReviews)); }catch(e){}
+    if(ALL_BY_ID[id]){
+      if(categoryRevised) ALL_BY_ID[id].category_revised = categoryRevised;
+      if(typeRevised) ALL_BY_ID[id].type_revised = typeRevised;
+      ALL_BY_ID[id].review_status = 'مراجعة التصنيف';
+    }
+    // تذكير دوري: القرارات محفوظة على هذا الجهاز فقط حتى تُصدَّر فعليًا داخل data.js
+    var savedCount = Object.keys(categoryReviews).length;
+    if(savedCount > 0 && savedCount % 20 === 0){
+      showToast('راجعت ' + savedCount.toLocaleString('ar') + ' مادة — لا تنسَ تصدير data.js بين فترة وأخرى حتى لا تفقد التقدّم');
+    }
+  }
+
+  var YEAR_COUNTS, TYPE_COUNTS, CATEGORY_COUNTS, AUTHOR_COUNTS, DUP_HIDDEN_COUNT, TOTAL;
+  function recomputeCounts(){
+    var yc = {}, tc = {}, cc = {}, ac = {}, dupHidden = 0;
+    ALL.forEach(function(p){
+      if(p.date){ var y = p.date.slice(0,4); yc[y] = (yc[y]||0)+1; }
+      tc[p.type] = (tc[p.type]||0)+1;
+      cc[p.category] = (cc[p.category]||0)+1;
+      if(p.author) ac[p.author] = (ac[p.author]||0)+1;
+      if(p.duplicate_of) dupHidden++;
+    });
+    YEAR_COUNTS = yc; TYPE_COUNTS = tc;
+    var order = ['حب وغزل','رثاء وفراق','إيمانيات ودعاء','حكمة وتأمل','أخلاق وسلوك','وطن وانتماء','حكايا ومواقف','عام','صورة بلا نص'];
+    var ordered = {};
+    order.forEach(function(c){ if(cc[c]) ordered[c] = cc[c]; });
+    Object.keys(cc).forEach(function(c){ if(!(c in ordered)) ordered[c] = cc[c]; });
+    CATEGORY_COUNTS = ordered;
+    AUTHOR_COUNTS = ac;
+    DUP_HIDDEN_COUNT = dupHidden;
+    TOTAL = ALL.length;
+  }
+  recomputeCounts();
+
+  function updateFooter(){
+    document.querySelector('.app-footer').textContent = 'أرشيف أوفلاين · ' + TOTAL.toLocaleString('ar') + ' تدوينة · © سالم عبدالواحد';
+  }
+  updateFooter();
+
+  // ================= Favorites =================
+  var favorites = {};
+  try{
+    var favRaw = localStorage.getItem(FAV_KEY);
+    if(favRaw) (JSON.parse(favRaw)||[]).forEach(function(id){ favorites[id] = true; });
+  }catch(e){}
+  function saveFavorites(){
+    try{ localStorage.setItem(FAV_KEY, JSON.stringify(Object.keys(favorites).map(Number))); }catch(e){}
+  }
+  function toggleFavorite(id){
+    if(favorites[id]) delete favorites[id]; else favorites[id] = true;
+    saveFavorites();
+  }
+
+  // ================= Theme =================
+  function applyTheme(dark){
+    document.body.classList.toggle('dark', dark);
+    var icon = document.getElementById('themeIcon');
+    if(dark){
+      icon.innerHTML = '<path d="M21 12.4A9 9 0 1 1 11.6 3 7 7 0 0 0 21 12.4Z"/>';
+    } else {
+      icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>';
+    }
+  }
+  var isDark = false;
+  try{ isDark = localStorage.getItem(THEME_KEY) === 'dark'; }catch(e){}
+  applyTheme(isDark);
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    isDark = !isDark;
+    applyTheme(isDark);
+    try{ localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light'); }catch(e){}
+  });
+
+  // ================= State + DOM refs =================
+  var state = { query:'', year:'all', type:'all', category:'all', author:'all', favOnly:false, hideDup:false, onThisDay:false, page:0, pageSize:25 };
+  var feedEl = document.getElementById('feed');
+  var loadMoreBtn = document.getElementById('loadMoreBtn');
+  var statsText = document.getElementById('statsText');
+  var statsFiltered = document.getElementById('statsFiltered');
+  var yearRail = document.getElementById('yearRail');
+  var typeTabs = document.getElementById('typeTabs');
+  var catRail = document.getElementById('catRail');
+  var authorRail = document.getElementById('authorRail');
+  var authorsToggleBtn = document.getElementById('authorsToggleBtn');
+  var dupToggle = document.getElementById('dupToggle');
+  var timelineBtn = document.getElementById('timelineBtn');
+  var timelineView = document.getElementById('timelineView');
+  var reviewBtn = document.getElementById('reviewBtn');
+  var reviewPanel = document.getElementById('reviewPanel');
+  var searchInput = document.getElementById('searchInput');
+
+  function buildTypeTabs(){
+    var defs = [
+      {key:'all', label:'الكل', n: TOTAL},
+      {key:'شعر', label:'شعر', n: TYPE_COUNTS['شعر']||0},
+      {key:'نثر', label:'نثر', n: TYPE_COUNTS['نثر']||0},
+      {key:'fav', label:'★ مفضلة', n: Object.keys(favorites).length}
+    ];
+    typeTabs.innerHTML = defs.map(function(d){
+      return '<div class="type-tab'+((state.type==='all'&&d.key==='all'&&!state.favOnly)?' active':'')+'" data-type="'+d.key+'">'+d.label+'<span class="n">'+d.n.toLocaleString('ar')+'</span></div>';
+    }).join('');
+    if(typeTabs.dataset.bound) return;
+    typeTabs.dataset.bound = '1';
+    typeTabs.addEventListener('click', function(e){
+      var tab = e.target.closest('.type-tab');
+      if(!tab) return;
+      var key = tab.getAttribute('data-type');
+      if(key === 'fav'){
+        state.favOnly = !state.favOnly;
+        state.type = 'all';
+      } else {
+        state.favOnly = false;
+        state.type = key;
+      }
+      state.page = 0;
+      typeTabs.querySelectorAll('.type-tab').forEach(function(t){ t.classList.remove('active'); });
+      if(state.favOnly){ typeTabs.querySelector('[data-type="fav"]').classList.add('active'); }
+      else { tab.classList.add('active'); }
+      render(true);
+    });
+  }
+  function refreshFavTabCount(){
+    var favTab = typeTabs.querySelector('[data-type="fav"] .n');
+    if(favTab) favTab.textContent = Object.keys(favorites).length.toLocaleString('ar');
+  }
+
+  function buildCatRail(){
+    var html = '<div class="cat-chip active" data-cat="all">كل الأقسام</div>';
+    Object.keys(CATEGORY_COUNTS).forEach(function(c){
+      html += '<div class="cat-chip" data-cat="'+c+'">'+c+' · '+CATEGORY_COUNTS[c].toLocaleString('ar')+'</div>';
+    });
+    catRail.innerHTML = html;
+    if(catRail.dataset.bound) return;
+    catRail.dataset.bound = '1';
+    catRail.addEventListener('click', function(e){
+      var chip = e.target.closest('.cat-chip');
+      if(!chip) return;
+      state.category = chip.getAttribute('data-cat');
+      state.page = 0;
+      catRail.querySelectorAll('.cat-chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      render(true);
+    });
+  }
+
+  function buildYearRail(){
+    var years = Object.keys(YEAR_COUNTS).sort(function(a,b){ return b-a; });
+    var html = '<div class="year-chip active" data-year="all">الكل · ' + TOTAL.toLocaleString('ar') + '</div>';
+    years.forEach(function(y){
+      html += '<div class="year-chip" data-year="'+y+'">'+ y +' · ' + YEAR_COUNTS[y].toLocaleString('ar') + '</div>';
+    });
+    yearRail.innerHTML = html;
+    if(yearRail.dataset.bound) return;
+    yearRail.dataset.bound = '1';
+    yearRail.addEventListener('click', function(e){
+      var chip = e.target.closest('.year-chip');
+      if(!chip) return;
+      state.year = chip.getAttribute('data-year');
+      state.page = 0;
+      yearRail.querySelectorAll('.year-chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      render(true);
+    });
+  }
+
+  function buildAuthorRail(){
+    var names = Object.keys(AUTHOR_COUNTS).sort(function(a,b){ return AUTHOR_COUNTS[b]-AUTHOR_COUNTS[a]; });
+    if(!names.length){ authorsToggleBtn.style.display = 'none'; return; }
+    var html = '<div class="author-chip active" data-author="all">كل المؤلفين</div>';
+    names.forEach(function(n){
+      html += '<div class="author-chip" data-author="'+n+'">'+n+' · '+AUTHOR_COUNTS[n].toLocaleString('ar')+'</div>';
+    });
+    authorRail.innerHTML = html;
+    if(authorRail.dataset.bound) return;
+    authorRail.dataset.bound = '1';
+    authorRail.addEventListener('click', function(e){
+      var chip = e.target.closest('.author-chip');
+      if(!chip) return;
+      state.author = chip.getAttribute('data-author');
+      state.page = 0;
+      authorRail.querySelectorAll('.author-chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      render(true);
+    });
+    authorsToggleBtn.addEventListener('click', function(){
+      var open = authorRail.style.display !== 'none';
+      authorRail.style.display = open ? 'none' : 'flex';
+      authorsToggleBtn.classList.toggle('active', !open);
+    });
+  }
+
+  function buildDupToggle(){
+    if(!DUP_HIDDEN_COUNT){ dupToggle.style.display = 'none'; return; }
+    dupToggle.textContent = 'إخفاء المكرر (' + DUP_HIDDEN_COUNT.toLocaleString('ar') + ')';
+    dupToggle.addEventListener('click', function(){
+      state.hideDup = !state.hideDup;
+      state.page = 0;
+      dupToggle.classList.toggle('active', state.hideDup);
+      render(true);
+    });
+  }
+
+  var TYPE_LABEL_SHORT = {'شعر':'شعر', 'نثر':'نثر', 'صورة':'صور'};
+  function yearAggregates(){
+    var byYear = {};
+    ALL.forEach(function(p){
+      if(!p.date) return;
+      var y = p.date.slice(0,4);
+      if(!byYear[y]) byYear[y] = { count:0, type:{}, cat:{} };
+      var d = byYear[y];
+      d.count++;
+      d.type[p.type] = (d.type[p.type]||0) + 1;
+      d.cat[p.category] = (d.cat[p.category]||0) + 1;
+    });
+    return byYear;
+  }
+
+  function buildTimeline(){
+    var byYear = yearAggregates();
+    var years = Object.keys(byYear).sort(function(a,b){ return b-a; }); // الأحدث أولًا
+    var html = '<button class="timeline-back" id="timelineBackBtn">← رجوع إلى الأرشيف</button>';
+    years.forEach(function(y){
+      var d = byYear[y];
+      var poetry = d.type['شعر']||0, prose = d.type['نثر']||0, image = d.type['صورة']||0;
+      var topCat = Object.keys(d.cat).sort(function(a,b){ return d.cat[b]-d.cat[a]; })[0];
+      html += '<div class="timeline-card" data-year="'+y+'">' +
+        '<span class="timeline-year">'+y+'</span><span class="timeline-count">'+d.count.toLocaleString('ar')+' مادة</span>' +
+        '<div class="timeline-bar">' +
+          (poetry ? '<span class="b-poetry" style="width:'+(poetry/d.count*100)+'%"></span>' : '') +
+          (prose ? '<span class="b-prose" style="width:'+(prose/d.count*100)+'%"></span>' : '') +
+          (image ? '<span class="b-image" style="width:'+(image/d.count*100)+'%"></span>' : '') +
+        '</div>' +
+        '<div class="timeline-meta">' +
+          '<span>شعر '+poetry.toLocaleString('ar')+'</span>' +
+          '<span>نثر '+prose.toLocaleString('ar')+'</span>' +
+          (image ? '<span>صور '+image.toLocaleString('ar')+'</span>' : '') +
+          (topCat ? '<span>أبرز موضوع: '+topCat+'</span>' : '') +
+        '</div></div>';
+    });
+    timelineView.innerHTML = html;
+    if(!timelineView.dataset.bound){
+      timelineView.dataset.bound = '1';
+      timelineView.addEventListener('click', function(e){
+        if(e.target.closest('#timelineBackBtn')){ showFeedView(); return; }
+        var card = e.target.closest('.timeline-card');
+        if(!card) return;
+        state.year = card.getAttribute('data-year');
+        state.page = 0;
+        yearRail.querySelectorAll('.year-chip').forEach(function(c){
+          c.classList.toggle('active', c.getAttribute('data-year') === state.year);
+        });
+        showFeedView();
+      });
+    }
+  }
+
+  function showTimelineView(){
+    buildTimeline();
+    timelineView.style.display = 'flex';
+    reviewPanel.style.display = 'none';
+    reviewBtn.classList.remove('active');
+    feedEl.style.display = 'none';
+    loadMoreBtn.style.display = 'none';
+    if(wotdSection) wotdSection.style.display = 'none';
+    if(homeCategories) homeCategories.style.display = 'none';
+    onThisDayBanner.style.display = 'none';
+    timelineBtn.classList.add('active');
+  }
+  function showFeedView(){
+    timelineView.style.display = 'none';
+    reviewPanel.style.display = 'none';
+    feedEl.style.display = '';
+    timelineBtn.classList.remove('active');
+    reviewBtn.classList.remove('active');
+    buildOnThisDayBanner();
+    render(true);
+  }
+  timelineBtn.addEventListener('click', function(){
+    if(timelineView.style.display === 'none' || !timelineView.style.display) showTimelineView();
+    else showFeedView();
+  });
+
+  // ================= مراجعة التصنيف (Category Review) =================
+  // القائمة المقترحة من Master Specification، قسم ٦ — التصنيف الرئيسي المنقّح لكل مادة.
+  // نبدأ المراجعة بالأولوية العملية المتفَق عليها: قسم "عام" أولًا (الأقل دقة تصنيفيًا، ٣٤٪ من الأرشيف).
+  var REVISED_CATEGORIES = [
+    'إيمانيات ودعاء','قرآن وتفسير','حديث وسيرة','الصلاة على النبي ﷺ','توبة واستغفار',
+    'صبر وابتلاء','دعاء ورجاء','حكمة وتأمل','أخلاق ومروءة','النفس وتزكيتها',
+    'علاقات إنسانية','أسرة وأبوة وأمومة','حب وغزل','فراق وحنين','رثاء وموت',
+    'شعر','نثر','لغة وأدب','علم ومعرفة','تربية',
+    'وطن وانتماء','مجتمع','مواقف وحكايات','تجارب حياة','أقوال علماء ومفكرين','مختارات عامة'
+  ];
+
+  function getReviewQueue(){
+    // الأولوية المتفَق عليها: قسم "عام" أولًا (الأقل دقة)، ثم "حب وغزل" (فيه أخطاء موعظة/إيمانيات مؤكَّدة)،
+    // ثم بقية الأقسام بترتيب الحجم — كل مادة لم تُراجَع بعد محليًا
+    var priority = ['عام','حب وغزل','إيمانيات ودعاء','حكمة وتأمل','رثاء وفراق','أخلاق وسلوك','حكايا ومواقف','وطن وانتماء','صورة بلا نص'];
+    return SORTED.filter(function(p){ return !p.category_revised && !p.type_revised; })
+      .slice()
+      .sort(function(a,b){
+        var ia = priority.indexOf(a.category); if(ia===-1) ia = priority.length;
+        var ib = priority.indexOf(b.category); if(ib===-1) ib = priority.length;
+        return ia - ib;
+      });
+  }
+  var reviewQueue = [];
+  var reviewIndex = 0;
+
+  function renderReviewCard(){
+    if(reviewIndex >= reviewQueue.length){
+      reviewPanel.innerHTML = '<button class="timeline-back" id="reviewBackBtn">← رجوع إلى الأرشيف</button>' +
+        '<div class="review-empty">🎉 راجعت كل المواد المتاحة الآن.<br>القرارات محفوظة على جهازك، ويمكن تصديرها من زر التصدير.</div>';
+      return;
+    }
+    var p = reviewQueue[reviewIndex];
+    var options = '<option value="__nochange__">— بدون تغيير التصنيف —</option>' +
+      REVISED_CATEGORIES.map(function(c){ return '<option value="'+c+'">'+c+'</option>'; }).join('');
+    var typeOptions = ['شعر','نثر','صورة'].map(function(t){
+      return '<option value="'+t+'"'+(t===p.type ? ' selected' : '')+'>'+t+'</option>';
+    }).join('');
+    reviewPanel.innerHTML =
+      '<button class="timeline-back" id="reviewBackBtn">← رجوع إلى الأرشيف</button>' +
+      '<div class="review-progress">مراجعة عامة — ' + (reviewIndex+1).toLocaleString('ar') + ' من ' + reviewQueue.length.toLocaleString('ar') + '</div>' +
+      '<div class="review-card">' +
+        '<div class="review-current-cat">القسم الحالي: ' + p.category + ' · النوع الحالي: ' + p.type + ' · ' + (p.date||'') + (p.author ? ' · ' + escapeHtml(p.author) : '') + '</div>' +
+        '<div class="review-text">' + escapeHtml(p.text) + '</div>' +
+        '<select class="review-select" id="reviewSelect">' + options + '</select>' +
+        '<select class="review-select" id="reviewTypeSelect">' + typeOptions + '</select>' +
+        '<div class="review-actions">' +
+          '<button class="review-skip" id="reviewSkipBtn">تخطّي</button>' +
+          '<button class="review-save" id="reviewSaveBtn">حفظ والتالي</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function showReviewView(){
+    reviewQueue = getReviewQueue();
+    reviewIndex = 0;
+    renderReviewCard();
+    reviewPanel.style.display = 'block';
+    timelineView.style.display = 'none';
+    feedEl.style.display = 'none';
+    loadMoreBtn.style.display = 'none';
+    if(wotdSection) wotdSection.style.display = 'none';
+    if(homeCategories) homeCategories.style.display = 'none';
+    onThisDayBanner.style.display = 'none';
+    reviewBtn.classList.add('active');
+  }
+  function showFeedViewFromReview(){
+    reviewPanel.style.display = 'none';
+    reviewBtn.classList.remove('active');
+    showFeedView();
+  }
+  reviewBtn.addEventListener('click', function(){
+    if(reviewPanel.style.display === 'none' || !reviewPanel.style.display) showReviewView();
+    else showFeedViewFromReview();
+  });
+  reviewPanel.addEventListener('click', function(e){
+    if(e.target.closest('#reviewBackBtn')){ showFeedViewFromReview(); return; }
+    if(e.target.closest('#reviewSkipBtn')){ reviewIndex++; renderReviewCard(); return; }
+    if(e.target.closest('#reviewSaveBtn')){
+      var p = reviewQueue[reviewIndex];
+      var catSel = document.getElementById('reviewSelect');
+      var typeSel = document.getElementById('reviewTypeSelect');
+      var catVal = catSel.value !== '__nochange__' ? catSel.value : null;
+      var typeVal = typeSel.value !== p.type ? typeSel.value : null;
+      if(!catVal && !typeVal){ catSel.focus(); return; } // لازم تغيير واحد على الأقل
+      saveCategoryReview(p.id, catVal, typeVal);
+      reviewIndex++;
+      renderReviewCard();
+      return;
+    }
+  });
+
+  // ================= في مثل هذا اليوم =================
+  var now = new Date();
+  var TODAY_MD = String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  var onThisDayBanner = document.getElementById('onThisDayBanner');
+  var wotdSection = document.getElementById('wotdSection');
+  var homeCategories = document.getElementById('homeCategories');
+  function buildOnThisDayBanner(){
+    var count = ALL.filter(function(p){ return p.date && p.date.slice(5,10) === TODAY_MD; }).length;
+    if(!count){ onThisDayBanner.style.display = 'none'; return; }
+    onThisDayBanner.style.display = 'block';
+    onThisDayBanner.innerHTML = '<div class="otd-banner" id="otdBtn">' +
+      '<span>🗓️ في مثل هذا اليوم عبر السنوات: ' + count.toLocaleString('ar') + ' مادة</span>' +
+      '<span id="otdArrow">‹</span></div>';
+    onThisDayBanner.querySelector('#otdBtn').addEventListener('click', function(){
+      state.onThisDay = !state.onThisDay;
+      state.page = 0;
+      this.classList.toggle('active', state.onThisDay);
+      document.getElementById('otdArrow').textContent = state.onThisDay ? '✕' : '‹';
+      // إلغاء أي عرض بديل (خط زمني/مراجعة) عند تفعيل هذه الميزة
+      if(state.onThisDay){ timelineView.style.display='none'; reviewPanel.style.display='none'; timelineBtn.classList.remove('active'); reviewBtn.classList.remove('active'); feedEl.style.display=''; }
+      render(true);
+    });
+  }
+
+  // ================= كلمة اليوم =================
+  // اختيار ثابت طوال اليوم (نفس المادة لو أعدت فتح الصفحة عدة مرات في نفس اليوم)، عبر hash بسيط للتاريخ
+  function simpleHash(str){
+    var h = 0;
+    for(var i=0; i<str.length; i++){ h = ((h<<5) - h + str.charCodeAt(i)) | 0; }
+    return Math.abs(h);
+  }
+  function buildWordOfDay(){
+    var dateStr = now.getFullYear() + '-' + TODAY_MD;
+    var eligible = ALL.filter(function(p){ return p.text && p.text.trim().length > 20 && p.text.trim().length < 400; });
+    if(!eligible.length){ wotdSection.style.display = 'none'; return; }
+    var idx = simpleHash(dateStr) % eligible.length;
+    var p = eligible[idx];
+    wotdSection.style.display = 'block';
+    wotdSection.innerHTML = '<div class="wotd-card">' +
+      '<div class="wotd-label">✦ كلمة اليوم</div>' +
+      '<div class="wotd-text">' + escapeHtml(p.text) + '</div>' +
+      '<div class="wotd-meta">' + p.type + (p.author ? ' · ' + escapeHtml(p.author) : '') + (p.date ? ' · ' + p.date : '') + '</div>' +
+    '</div>';
+    wotdSection.querySelector('.wotd-card').addEventListener('click', function(){
+      location.hash = 'id=' + p.id;
+      handleHashDeepLink();
+    });
+  }
+
+  // ================= التصنيفات على الصفحة الرئيسية =================
+  function buildHomeCategories(){
+    var cats = Object.keys(CATEGORY_COUNTS);
+    if(!cats.length){ homeCategories.style.display = 'none'; return; }
+    var html = '<div class="home-cat-grid">';
+    cats.forEach(function(c){
+      html += '<div class="home-cat-tile" data-cat="'+c+'"><div class="n">'+c+'</div><div class="c">'+CATEGORY_COUNTS[c].toLocaleString('ar')+' مادة</div></div>';
+    });
+    html += '</div>';
+    homeCategories.innerHTML = html;
+    homeCategories.style.display = 'block';
+    if(homeCategories.dataset.bound) return;
+    homeCategories.dataset.bound = '1';
+    homeCategories.addEventListener('click', function(e){
+      var tile = e.target.closest('.home-cat-tile');
+      if(!tile) return;
+      state.category = tile.getAttribute('data-cat');
+      state.page = 0;
+      catRail.querySelectorAll('.cat-chip').forEach(function(c){
+        c.classList.toggle('active', c.getAttribute('data-cat') === state.category);
+      });
+      render(true);
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  // كانت هذه السطر محذوفًا بالخطأ أثناء إضافة "كلمة اليوم" — وهو ما كان يمنع ظهور أي مادة في الأرشيف،
+  // لأن getFiltered() و getReviewQueue() يعتمدان عليه مباشرة.
+  var SORTED = ALL.slice().sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
+
+  function highlight(post, q){
+    var text = post.text;
+    if(!q) return escapeHtml(text);
+    var nq = normalizeQuery(q);
+    var spans = findAllSpans(post._norm, post._map, nq);
+    if(!spans.length) return escapeHtml(text);
+    var out = '', last = 0;
+    spans.forEach(function(sp){
+      out += escapeHtml(text.slice(last, sp[0]));
+      out += '<mark>' + escapeHtml(text.slice(sp[0], sp[1])) + '</mark>';
+      last = sp[1];
+    });
+    out += escapeHtml(text.slice(last));
+    return out;
+  }
+
+  function getFiltered(){
+    var q = state.query.trim();
+    var nq = q ? normalizeQuery(q) : '';
+    return SORTED.filter(function(p){
+      if(state.favOnly && !favorites[p.id]) return false;
+      if(state.year !== 'all' && (!p.date || p.date.slice(0,4) !== state.year)) return false;
+      if(state.type !== 'all' && p.type !== state.type) return false;
+      if(state.category !== 'all' && p.category !== state.category) return false;
+      if(state.author !== 'all' && p.author !== state.author) return false;
+      if(state.hideDup && p.duplicate_of) return false;
+      if(state.onThisDay && (!p.date || p.date.slice(5,10) !== TODAY_MD)) return false;
+      if(nq && p._norm.indexOf(nq) === -1 && (!p._normTags || p._normTags.indexOf(nq) === -1)) return false;
+      return true;
+    });
+  }
+
+  var currentFiltered = [];
+
+  function formatDate(iso){
+    if(!iso) return '';
+    var parts = iso.split('-');
+    var months = ['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+    return parts[2] + ' ' + months[parseInt(parts[1],10)] + ' ' + parts[0];
+  }
+
+  var TYPE_CLASS = {'شعر':'tag-poetry','نثر':'tag-prose','صورة':'tag-image'};
+  var MOTIF_CLASS = {'شعر':'motif-شعر','نثر':'motif-نثر','صورة':'motif-صورة'};
+
+  function cardHtml(p, q){
+    var mediaFlag = p.media ? '<span class="media-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-4-4 3-3-2-6 5"/></svg>مرفق صورة</span>' : '<span></span>';
+    var typeTag = p.type ? '<span class="tag '+(TYPE_CLASS[p.type]||'')+'">'+p.type+'</span>' : '';
+    var catTag = (p.category && p.category !== 'عام' && p.category !== 'صورة بلا نص') ? '<span class="tag tag-cat">'+p.category+'</span>' : '';
+    var authorTag = p.author ? '<span class="tag tag-author">'+escapeHtml(p.author)+'</span>' : '';
+    var motif = MOTIF_CLASS[p.type] || '';
+    var isLong = (p.text.split('\n').length > 6) || p.text.length > 340;
+    var clampClass = isLong ? ' clamped' : '';
+    var readMoreBtn = isLong ? '<button class="read-more-btn" data-more="'+p.id+'">اقرأ المزيد</button>' : '';
+    var isFav = !!favorites[p.id];
+    var favClass = isFav ? 'btn-mini fav-on' : 'btn-mini';
+    var favIconFill = isFav ? 'currentColor' : 'none';
+    var hijri = hijriLabel(p.date);
+    return (
+      '<div class="card '+motif+'" data-id="'+p.id+'" id="post-'+p.id+'">' +
+        '<div class="card-date"><span class="dot"></span>' + formatDate(p.date) +
+          (hijri ? ' <span class="hijri">· '+hijri+'</span>' : '') +
+          typeTag + catTag + authorTag + '</div>' +
+        '<div class="card-text'+clampClass+'" data-text-id="'+p.id+'">' + highlight(p, q) + '</div>' +
+        readMoreBtn +
+        '<div class="card-footer">' +
+          '<div class="footer-left">' + mediaFlag + '</div>' +
+          '<div class="footer-actions">' +
+            '<button class="'+favClass+'" data-fav="'+p.id+'"><svg viewBox="0 0 24 24" fill="'+favIconFill+'" stroke="currentColor" stroke-width="1.6"><path d="M12 17.3l-5.5 3 1.4-6-4.7-4 6.2-.5L12 4l2.6 5.8 6.2.5-4.7 4 1.4 6z"/></svg></button>' +
+            '<button class="btn-mini" data-share="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg></button>' +
+            '<button class="btn-mini" data-copy="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>نسخ</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="card-watermark">' + COPYRIGHT_TEXT + '</div>' +
+      '</div>'
+    );
+  }
+
+  function render(reset){
+    if(reset){
+      currentFiltered = getFiltered();
+      state.page = 0;
+      feedEl.innerHTML = '';
+    }
+    // "الصفحة الرئيسية" (كلمة اليوم + التصنيفات) تظهر فقط في الحالة الافتراضية بدون بحث/فلاتر نشطة
+    var isHomeState = !state.query && state.year==='all' && state.type==='all' && state.category==='all' && state.author==='all' && !state.favOnly && !state.hideDup && !state.onThisDay;
+    if(wotdSection) wotdSection.style.display = isHomeState ? 'block' : 'none';
+    if(homeCategories) homeCategories.style.display = isHomeState ? 'block' : 'none';
+    statsFiltered.textContent = (state.query || state.year !== 'all' || state.type !== 'all' || state.category !== 'all' || state.author !== 'all' || state.favOnly || state.hideDup || state.onThisDay)
+      ? 'نتائج: ' + currentFiltered.length.toLocaleString('ar') : '';
+    statsText.textContent = TOTAL.toLocaleString('ar') + ' تدوينة منذ ٢٠١٢';
+
+    if(currentFiltered.length === 0){
+      feedEl.innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة</div>';
+      loadMoreBtn.style.display = 'none';
+      return;
+    }
+    var start = state.page * state.pageSize;
+    var end = start + state.pageSize;
+    var slice = currentFiltered.slice(start, end);
+    var html = slice.map(function(p){ return cardHtml(p, state.query); }).join('');
+    feedEl.insertAdjacentHTML('beforeend', html);
+    state.page++;
+    loadMoreBtn.style.display = (state.page * state.pageSize < currentFiltered.length) ? 'block' : 'none';
+  }
+
+  var searchTimer;
+  searchInput.addEventListener('input', function(e){
+    clearTimeout(searchTimer);
+    var val = e.target.value;
+    searchTimer = setTimeout(function(){ state.query = val; render(true); }, 220);
+  });
+  loadMoreBtn.addEventListener('click', function(){ render(false); });
+
+  // ================= Toast =================
+  var toastEl = document.getElementById('toast');
+  var toastTimer;
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 3200);
+  }
+
+  // ================= Feed interactions (delegate) =================
+  feedEl.addEventListener('click', function(e){
+    var copyBtn = e.target.closest('[data-copy]');
+    var favBtn = e.target.closest('[data-fav]');
+    var shareBtn = e.target.closest('[data-share]');
+    var moreBtn = e.target.closest('[data-more]');
+
+    if(copyBtn){
+      var id1 = parseInt(copyBtn.getAttribute('data-copy'), 10);
+      var post1 = ALL.find(function(p){ return p.id === id1; });
+      if(!post1) return;
+      var text = post1.text + '\n\n' + COPYRIGHT_TEXT;
+      var done = function(){
+        copyBtn.classList.add('copied');
+        var orig = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>تم';
+        setTimeout(function(){ copyBtn.classList.remove('copied'); copyBtn.innerHTML = orig; }, 1500);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+      } else { fallbackCopy(text, done); }
+      return;
+    }
+    if(favBtn){
+      var id2 = parseInt(favBtn.getAttribute('data-fav'), 10);
+      toggleFavorite(id2);
+      var isFav2 = !!favorites[id2];
+      favBtn.classList.toggle('fav-on', isFav2);
+      favBtn.querySelector('svg').setAttribute('fill', isFav2 ? 'currentColor' : 'none');
+      refreshFavTabCount();
+      if(state.favOnly && !isFav2){ render(true); }
+      return;
+    }
+    if(shareBtn){
+      var id3 = parseInt(shareBtn.getAttribute('data-share'), 10);
+      var url = location.href.split('#')[0] + '#id=' + id3;
+      var doneShare = function(){ showToast('تم نسخ رابط التدوينة'); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(doneShare).catch(function(){ fallbackCopy(url, doneShare); });
+      } else { fallbackCopy(url, doneShare); }
+      return;
+    }
+    if(moreBtn){
+      var id4 = moreBtn.getAttribute('data-more');
+      var textEl = feedEl.querySelector('[data-text-id="'+id4+'"]');
+      textEl.classList.toggle('clamped');
+      if(!textEl.classList.contains('clamped')){
+        moreBtn.textContent = 'عرض أقل';
+      } else {
+        moreBtn.textContent = 'اقرأ المزيد';
+      }
+      return;
+    }
+  });
+
+  function fallbackCopy(text, cb){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    cb();
+  }
+
+  // ================= Random quote modal =================
+  var overlay = document.getElementById('overlay');
+  var modalText = document.getElementById('modalText');
+  var modalDate = document.getElementById('modalDate');
+  document.getElementById('randomBtn').addEventListener('click', function(){
+    var p = ALL[Math.floor(Math.random() * ALL.length)];
+    modalText.textContent = p.text;
+    modalDate.textContent = formatDate(p.date);
+    overlay.classList.add('show');
+  });
+  document.getElementById('modalClose').addEventListener('click', function(){ overlay.classList.remove('show'); });
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('show'); });
+
+  // ================= Page watermark =================
+  (function buildPageWatermark(){
+    var wm = document.getElementById('pageWatermark');
+    var rows = 24, html = '';
+    for(var i=0;i<rows;i++){
+      html += '<div class="row" style="top:'+(i*90)+'px;">' + (COPYRIGHT_TEXT + '   ').repeat(6) + '</div>';
+    }
+    wm.innerHTML = html;
+  })();
+
+  // ================= Import updates =================
+  var importBtn = document.getElementById('importBtn');
+  var importFile = document.getElementById('importFile');
+  importBtn.addEventListener('click', function(){ importFile.value=''; importFile.click(); });
+  importFile.addEventListener('change', function(e){
+    var files = Array.prototype.slice.call(e.target.files || []);
+    if(!files.length) return;
+    showToast('جارٍ قراءة ' + files.length + ' ملف…');
+    var readers = files.map(function(file){
+      return file.text().then(function(txt){
+        try{ return JSON.parse(txt); }catch(err){ return null; }
+      }).catch(function(){ return null; });
+    });
+    Promise.all(readers).then(function(jsons){
+      var newPosts = [];
+      jsons.forEach(function(json){ if(json) newPosts = newPosts.concat(parseFacebookExport(json)); });
+      if(!newPosts.length){ showToast('لم يتم العثور على منشورات جديدة تحمل الهاشتاج'); return; }
+      var existingTsNow = {};
+      ALL.forEach(function(p){ if(p.ts) existingTsNow[p.ts] = true; });
+      var uniqueNew = newPosts.filter(function(p){
+        if(!p.ts || existingTsNow[p.ts]) return false;
+        existingTsNow[p.ts] = true;
+        return true;
+      });
+      if(!uniqueNew.length){ showToast('كل المنشورات في الملف موجودة بالفعل بالأرشيف'); return; }
+      uniqueNew.forEach(function(p){ p.id = nextId++; });
+
+      var storedExtra = [];
+      try{ var raw2 = localStorage.getItem(STORAGE_KEY); if(raw2) storedExtra = JSON.parse(raw2); }catch(err){ storedExtra = []; }
+      storedExtra = storedExtra.concat(uniqueNew);
+      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(storedExtra)); }
+      catch(err){ showToast('تعذّر الحفظ داخل المتصفح (المساحة ممتلئة على الأرجح)'); return; }
+
+      uniqueNew.forEach(function(p){
+        var nm = buildNormMap(p.text || '');
+        p._norm = nm.norm; p._map = nm.map;
+        p._normTags = normalizeQuery((p.tags||[]).map(function(t){ return t.replace(/^#/,'').replace(/_/g,' '); }).join(' '));
+      });
+      ALL = ALL.concat(uniqueNew);
+      SORTED = ALL.slice().sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
+      recomputeCounts();
+      updateFooter();
+      typeTabs.dataset.bound = ''; catRail.dataset.bound=''; yearRail.dataset.bound=''; authorRail.dataset.bound='';
+      buildTypeTabs(); buildCatRail(); buildYearRail(); buildAuthorRail(); buildDupToggle(); buildOnThisDayBanner(); buildHomeCategories();
+      render(true);
+      showToast('تم إضافة ' + uniqueNew.length.toLocaleString('ar') + ' منشور جديد إلى الأرشيف');
+    });
+  });
+
+  // ================= Export updated archive data =================
+  // ملاحظة معمارية: بعد التحول لبنية <year>.json المقسّمة حسب السنة، ما بقاش عملي نصدّر ملف واحد
+  // يستبدل به مباشرة (زي data.js قديمًا). بدل كده نصدّر ملف مُجمَّع واحد (data-export.json)،
+  // وبعدها تشغّل split-data.js عليه محليًا لإعادة توليد ملفات .json تلقائيًا.
+  document.getElementById('exportBtn').addEventListener('click', function(){
+    var merged = ALL.map(function(p){
+      var out = {};
+      Object.keys(p).forEach(function(k){ if(k.charAt(0) !== '_') out[k] = p[k]; });
+      return out;
+    });
+    var blob = new Blob([JSON.stringify(merged)], {type:'application/json;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'data-export.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+    showToast('تم تنزيل data-export.json — شغّل عليه: node split-data.js data-export.json لتحديث ملفات .json');
+  });
+
+  // ================= Deep link (#id=xxx) =================
+  function handleHashDeepLink(){
+    var m = location.hash.match(/id=(\d+)/);
+    if(!m) return;
+    var id = parseInt(m[1], 10);
+    var idx = SORTED.findIndex(function(p){ return p.id === id; });
+    if(idx === -1) return;
+    state.page = Math.floor(idx / state.pageSize) + 1;
+    currentFiltered = getFiltered();
+    feedEl.innerHTML = currentFiltered.slice(0, state.page*state.pageSize).map(function(p){ return cardHtml(p, ''); }).join('');
+    loadMoreBtn.style.display = (state.page * state.pageSize < currentFiltered.length) ? 'block' : 'none';
+    setTimeout(function(){
+      var el = document.getElementById('post-'+id);
+      if(el){
+        el.scrollIntoView({behavior:'smooth', block:'center'});
+        el.classList.add('highlighted');
+        setTimeout(function(){ el.classList.remove('highlighted'); }, 2500);
+      }
+    }, 60);
+  }
+
+  buildTypeTabs();
+  buildCatRail();
+  buildYearRail();
+  buildAuthorRail();
+  buildDupToggle();
+  buildOnThisDayBanner();
+  buildWordOfDay();
+  buildHomeCategories();
+  render(true);
+  handleHashDeepLink();
+
+  // ================= PWA: register service worker (needs http/https hosting, not file://) =================
+  if('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('service-worker.js').catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>

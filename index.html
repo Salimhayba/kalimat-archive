@@ -15,15 +15,15 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="كلمات أعجبتني — الأرشيف">
+<meta property="og:site_name" content="كلمات أعجبتني">
 <meta property="og:description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢ — أكثر من ٨١٠٠ تدوينة قابلة للبحث والتصفح.">
-<meta property="og:image" content="icon-512.png">
-<!-- استبدل الرابط ده برابط GitHub Pages الفعلي بعد النشر (مثال: https://salimhayba.github.io/kalimat-archive/) -->
+<meta property="og:image" content="https://salimhayba.github.io/kalimat-archive/icon-512.png">
 <meta property="og:url" content="https://salimhayba.github.io/kalimat-archive/">
 <meta property="og:locale" content="ar_AR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="كلمات أعجبتني — الأرشيف">
 <meta name="twitter:description" content="أرشيف شخصي لما راق سالم عبدالواحد من شعر ونثر، منذ ٢٠١٢">
-<meta name="twitter:image" content="icon-512.png">
+<meta name="twitter:image" content="https://salimhayba.github.io/kalimat-archive/icon-512.png">
 <link rel="canonical" href="https://salimhayba.github.io/kalimat-archive/">
 <meta name="description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢، مع بحث وتصفح حسب النوع والقسم والسنة.">
 
@@ -174,6 +174,22 @@
   .icon-btn svg{ width:19px; height:19px; }
   .icon-btn:active{ transform: scale(0.94); }
   .icon-btn.active-fav{ background: var(--rubric); border-color: var(--rubric); color: var(--parchment); }
+  .more-menu-wrap{ position:relative; flex-shrink:0; }
+  .more-menu{
+    position:absolute; top:50px; inset-inline-end:0; z-index:20; min-width:210px;
+    background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    border:1px solid var(--glass-border); border-radius:12px; padding:6px; box-shadow: var(--card-shadow);
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .more-menu-item{
+    display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:8px;
+    background:none; border:none; cursor:pointer; font-family: var(--sans); font-size:0.82rem;
+    color: var(--ink); text-align:right; width:100%;
+  }
+  .more-menu-item:active{ background: rgba(163,121,63,0.14); }
+  .more-menu-item svg{ width:18px; height:18px; flex-shrink:0; color: var(--brass-deep); }
+  .more-menu-item.active{ background: var(--brass); color: var(--parchment); }
+  .more-menu-item.active svg{ color: var(--parchment); }
   #timelineBtn.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
 
   .type-tabs{ display:flex; gap:8px; padding: 12px 4px 2px; }
@@ -485,29 +501,42 @@
     <div class="search-row">
       <div class="search-box">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input id="searchInput" type="search" placeholder="ابحث في الكلمات…" autocomplete="off">
+        <input id="searchInput" type="search" placeholder="ابحث في الكلمات…" autocomplete="off" aria-label="ابحث في الأرشيف">
       </div>
       <button class="icon-btn" id="randomBtn" aria-label="كلمة عشوائية">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><circle cx="6.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/><circle cx="17.5" cy="17.5" r="0.8" fill="currentColor" stroke="none"/><path d="M10 14 L14 10"/></svg>
       </button>
-      <button class="icon-btn" id="importBtn" aria-label="استيراد تحديثات">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
-      </button>
-      <button class="icon-btn" id="exportBtn" aria-label="تصدير نسخة محدثة">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21V9"/><path d="M7 14l5-5 5 5"/><path d="M4 5h16"/></svg>
-      </button>
-      <button class="icon-btn authors-toggle-btn" id="authorsToggleBtn" aria-label="تصفية بالمؤلف">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
-      </button>
-      <button class="icon-btn" id="timelineBtn" aria-label="رحلتي مع الكلمة">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10"/><path d="M4 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 20V13"/><path d="M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M20 20V6"/><path d="M20 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
-      </button>
-      <button class="icon-btn" id="reviewBtn" aria-label="مراجعة التصنيف">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
-      </button>
-      <button class="icon-btn" id="statsBtn" aria-label="الأرشيف بالأرقام">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/></svg>
-      </button>
+      <div class="more-menu-wrap">
+        <button class="icon-btn" id="moreMenuBtn" aria-label="المزيد من الأدوات" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+        </button>
+        <div class="more-menu" id="moreMenu" style="display:none;">
+          <button class="more-menu-item" id="importBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+            استيراد تحديثات
+          </button>
+          <button class="more-menu-item" id="exportBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21V9"/><path d="M7 14l5-5 5 5"/><path d="M4 5h16"/></svg>
+            تصدير نسخة محدثة
+          </button>
+          <button class="more-menu-item authors-toggle-btn" id="authorsToggleBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+            تصفية بالمؤلف
+          </button>
+          <button class="more-menu-item" id="timelineBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10"/><path d="M4 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 20V13"/><path d="M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M20 20V6"/><path d="M20 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
+            رحلتي مع الكلمة
+          </button>
+          <button class="more-menu-item" id="reviewBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+            مراجعة التصنيف
+          </button>
+          <button class="more-menu-item" id="statsBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/></svg>
+            الأرشيف بالأرقام
+          </button>
+        </div>
+      </div>
       <input type="file" id="importFile" accept=".json" multiple style="display:none;">
     </div>
     <div class="type-tabs" id="typeTabs"></div>
@@ -517,7 +546,7 @@
     <div class="stats-line">
       <span id="statsText">—</span>
       <span style="display:flex; align-items:center; gap:8px;">
-        <button class="dup-toggle" id="dupToggle">إخفاء المكرر</button>
+        <button class="dup-toggle" id="dupToggle">بدون تكرار</button>
         <span id="statsFiltered" aria-live="polite"></span>
       </span>
     </div>
@@ -939,7 +968,29 @@
   var reviewPanel = document.getElementById('reviewPanel');
   var statsBtn = document.getElementById('statsBtn');
   var statsPanel = document.getElementById('statsPanel');
+  var moreMenuBtn = document.getElementById('moreMenuBtn');
+  var moreMenu = document.getElementById('moreMenu');
   var searchInput = document.getElementById('searchInput');
+
+  // ================= قائمة "المزيد" (لتخفيف زحمة شريط الأدوات على الموبايل) =================
+  function closeMoreMenu(){
+    moreMenu.style.display = 'none';
+    moreMenuBtn.setAttribute('aria-expanded', 'false');
+  }
+  moreMenuBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = moreMenu.style.display !== 'none';
+    moreMenu.style.display = open ? 'none' : 'flex';
+    moreMenuBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+  });
+  // إغلاق القائمة تلقائيًا بعد اختيار أي عنصر منها (تجربة أنضف)، ما عدا "تصفية بالمؤلف" لأنها تفتح شريطًا فرعيًا يحتاج القائمة تفضل مرجعية
+  moreMenu.addEventListener('click', function(e){
+    if(e.target.closest('#authorsToggleBtn')) return;
+    closeMoreMenu();
+  });
+  document.addEventListener('click', function(e){
+    if(moreMenu.style.display !== 'none' && !e.target.closest('.more-menu-wrap')) closeMoreMenu();
+  });
 
   function buildTypeTabs(){
     var defs = [
@@ -1043,7 +1094,7 @@
 
   function buildDupToggle(){
     if(!DUP_HIDDEN_COUNT){ dupToggle.style.display = 'none'; return; }
-    dupToggle.textContent = 'إخفاء المكرر (' + DUP_HIDDEN_COUNT.toLocaleString('ar') + ')';
+    dupToggle.textContent = 'بدون تكرار (' + DUP_HIDDEN_COUNT.toLocaleString('ar') + ')';
     dupToggle.addEventListener('click', function(){
       state.hideDup = !state.hideDup;
       state.page = 0;
@@ -1497,6 +1548,8 @@
     var html = slice.map(function(p){ return cardHtml(p, state.query); }).join('');
     feedEl.insertAdjacentHTML('beforeend', html);
     state.page++;
+    var shownCount = Math.min(state.page * state.pageSize, currentFiltered.length);
+    loadMoreBtn.textContent = 'تحميل المزيد — عرض ' + shownCount.toLocaleString('ar') + ' من ' + currentFiltered.length.toLocaleString('ar');
     loadMoreBtn.style.display = (state.page * state.pageSize < currentFiltered.length) ? 'block' : 'none';
   }
 
@@ -1760,6 +1813,8 @@
     state.page = Math.floor(idx / state.pageSize) + 1;
     currentFiltered = getFiltered();
     feedEl.innerHTML = currentFiltered.slice(0, state.page*state.pageSize).map(function(p){ return cardHtml(p, ''); }).join('');
+    var shownCount2 = Math.min(state.page * state.pageSize, currentFiltered.length);
+    loadMoreBtn.textContent = 'تحميل المزيد — عرض ' + shownCount2.toLocaleString('ar') + ' من ' + currentFiltered.length.toLocaleString('ar');
     loadMoreBtn.style.display = (state.page * state.pageSize < currentFiltered.length) ? 'block' : 'none';
     setTimeout(function(){
       var el = document.getElementById('post-'+id);

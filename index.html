@@ -403,6 +403,16 @@
   }
   .modal-nav-btn:disabled{ opacity:0.3; cursor:default; }
   .modal-nav-btn svg{ width:16px; height:16px; }
+  .active-filters{ display:flex; flex-wrap:wrap; gap:6px; padding: 4px 4px 2px; }
+  .active-filter-badge{
+    display:flex; align-items:center; gap:5px; font-family: var(--sans); font-size: 0.68rem;
+    background: var(--brass); color: var(--parchment); border-radius: 999px; padding: 4px 6px 4px 10px;
+    cursor:pointer;
+  }
+  .active-filter-badge .x{
+    width:16px; height:16px; border-radius:50%; background: rgba(255,255,255,0.25);
+    display:flex; align-items:center; justify-content:center; font-size:0.7rem; line-height:1;
+  }
   .modal-author{
     font-family: var(--serif); font-size: 0.95rem; color: var(--brass-deep); font-weight:600;
     text-align:center; margin-top:16px;
@@ -543,6 +553,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg>
             تصدير مفضّلتي وتقييماتي
           </button>
+          <button class="more-menu-item" id="importStateBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><rect x="3" y="17" width="18" height="4" rx="1"/></svg>
+            استيراد مفضّلتي وتقييماتي
+          </button>
           <button class="more-menu-item authors-toggle-btn" id="authorsToggleBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
             تصفية بالمؤلف
@@ -562,6 +576,7 @@
         </div>
       </div>
       <input type="file" id="importFile" accept=".json" multiple style="display:none;">
+      <input type="file" id="importStateFile" accept=".json" style="display:none;">
     </div>
     <div class="type-tabs" id="typeTabs"></div>
     <div class="cat-rail" id="catRail"></div>
@@ -570,13 +585,14 @@
     <div class="stats-line">
       <span id="statsText">—</span>
       <span style="display:flex; align-items:center; gap:8px;">
-        <button class="dup-toggle" id="dupToggle">بدون تكرار</button>
+        <button class="dup-toggle" id="dupToggle" title="يخفي عرض النصوص المكررة فقط، ولا يحذفها من الأرشيف">بدون تكرار</button>
         <button class="dup-toggle" id="shareFilterBtn" style="display:none;" aria-label="نسخ رابط هذا العرض">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="width:13px;height:13px;vertical-align:-2px;"><circle cx="18" cy="5" r="2.2"/><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="19" r="2.2"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg>
         </button>
         <span id="statsFiltered" aria-live="polite"></span>
       </span>
     </div>
+    <div class="active-filters" id="activeFilters"></div>
     <div class="year-rail" id="yearRail"></div>
   </div>
 
@@ -995,6 +1011,7 @@
   var statsText = document.getElementById('statsText');
   var statsFiltered = document.getElementById('statsFiltered');
   var shareFilterBtn = document.getElementById('shareFilterBtn');
+  var activeFilters = document.getElementById('activeFilters');
   var yearRail = document.getElementById('yearRail');
   var typeTabs = document.getElementById('typeTabs');
   var catRail = document.getElementById('catRail');
@@ -1114,7 +1131,13 @@
       html += '<div class="author-chip'+(state.author===n?' active':'')+'" data-author="'+n+'">'+n+' · '+AUTHOR_COUNTS[n].toLocaleString('ar')+'</div>';
     });
     authorRail.innerHTML = html;
-    if(state.author !== 'all'){ authorRail.style.display = 'flex'; authorsToggleBtn.classList.add('active'); }
+    if(state.author !== 'all'){
+      authorRail.style.display = 'flex'; authorsToggleBtn.classList.add('active');
+      setTimeout(function(){
+        var activeChip = authorRail.querySelector('.author-chip.active');
+        if(activeChip && activeChip.scrollIntoView) activeChip.scrollIntoView({inline:'center', block:'nearest'});
+      }, 0);
+    }
     if(authorRail.dataset.bound) return;
     authorRail.dataset.bound = '1';
     authorRail.addEventListener('click', function(e){
@@ -1597,9 +1620,23 @@
       var descSuffix = descParts.length ? (' ' + descParts.join(' · ')) : '';
       statsFiltered.textContent = arabicNounCount(currentFiltered.length, 'نص', 'نصّان', 'نصوص') + descSuffix;
       shareFilterBtn.style.display = 'inline-flex';
+
+      // شارات الفلاتر النشطة القابلة للإلغاء الفردي
+      var badges = [];
+      if(state.query) badges.push({label: '«' + state.query + '»', clear: 'query'});
+      if(state.year !== 'all') badges.push({label: state.year, clear: 'year'});
+      if(state.type !== 'all') badges.push({label: state.type, clear: 'type'});
+      if(state.category !== 'all') badges.push({label: state.category, clear: 'category'});
+      if(state.author !== 'all') badges.push({label: state.author, clear: 'author'});
+      if(state.favOnly) badges.push({label: '★ المفضلة', clear: 'favOnly'});
+      if(state.onThisDay) badges.push({label: 'في مثل هذا اليوم', clear: 'onThisDay'});
+      activeFilters.innerHTML = badges.map(function(b){
+        return '<span class="active-filter-badge" data-clear="'+b.clear+'">'+escapeHtml(b.label)+'<span class="x">×</span></span>';
+      }).join('');
     } else {
       statsFiltered.textContent = '';
       shareFilterBtn.style.display = 'none';
+      activeFilters.innerHTML = '';
     }
     statsText.textContent = TOTAL.toLocaleString('ar') + ' نص منذ ٢٠١٢';
 
@@ -1997,6 +2034,53 @@
     showToast('تم تنزيل مفضّلتك وتقييماتك ومراجعاتك في ملف واحد');
   });
 
+  // ================= استيراد الحالة الشخصية (دمج، لا استبدال) =================
+  var importStateBtn = document.getElementById('importStateBtn');
+  var importStateFile = document.getElementById('importStateFile');
+  importStateBtn.addEventListener('click', function(){ importStateFile.value=''; importStateFile.click(); });
+  importStateFile.addEventListener('change', function(e){
+    var file = (e.target.files || [])[0];
+    if(!file) return;
+    file.text().then(function(txt){
+      var data;
+      try{ data = JSON.parse(txt); }catch(err){ showToast('الملف غير صالح — تأكد إنه my-kalimat-state.json'); return; }
+      if(!data || !Array.isArray(data.favorites) || !Array.isArray(data.ratings) || !Array.isArray(data.category_reviews)){
+        showToast('صيغة الملف غير متعرَّف عليها'); return;
+      }
+      var msg = 'هيتم دمج ' + data.favorites.length.toLocaleString('ar') + ' مفضّلة و' +
+        data.ratings.length.toLocaleString('ar') + ' تقييم و' + data.category_reviews.length.toLocaleString('ar') +
+        ' مراجعة تصنيف مع بياناتك الحالية على هذا الجهاز. متابعة؟';
+      if(!window.confirm(msg)) return;
+
+      data.favorites.forEach(function(id){
+        favorites[id] = true;
+      });
+      try{ localStorage.setItem(FAV_KEY, JSON.stringify(Object.keys(favorites).map(Number))); }catch(err){}
+
+      data.ratings.forEach(function(item){
+        ratings[item.id] = item.rating;
+        if(ALL_BY_ID[item.id]) ALL_BY_ID[item.id].rating = item.rating;
+      });
+      try{ localStorage.setItem(RATING_KEY, JSON.stringify(ratings)); }catch(err){}
+
+      data.category_reviews.forEach(function(item){
+        var existing = categoryReviews[item.id] || {};
+        if(item.category_revised) existing.category_revised = item.category_revised;
+        if(item.type_revised) existing.type_revised = item.type_revised;
+        existing.review_status = 'مراجعة التصنيف';
+        categoryReviews[item.id] = existing;
+        if(ALL_BY_ID[item.id]){
+          if(item.category_revised) ALL_BY_ID[item.id].category_revised = item.category_revised;
+          if(item.type_revised) ALL_BY_ID[item.id].type_revised = item.type_revised;
+        }
+      });
+      try{ localStorage.setItem(REVIEW_KEY, JSON.stringify(categoryReviews)); }catch(err){}
+
+      render(true);
+      showToast('تم دمج الحالة الشخصية بنجاح');
+    }).catch(function(){ showToast('تعذّرت قراءة الملف'); });
+  });
+
   // ================= مشاركة حالة التصفح (رابط يحمل البحث + الفلاتر) =================
   function buildFilterStateURL(){
     var params = new URLSearchParams();
@@ -2018,6 +2102,26 @@
     } else if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(url).then(done).catch(function(){ fallbackCopy(url, done); });
     } else { fallbackCopy(url, done); }
+  });
+
+  // إلغاء فلتر منفرد من شارات الفلاتر النشطة
+  activeFilters.addEventListener('click', function(e){
+    var badge = e.target.closest('[data-clear]');
+    if(!badge) return;
+    var field = badge.getAttribute('data-clear');
+    state.page = 0;
+    if(field === 'query'){ state.query = ''; searchInput.value = ''; }
+    else if(field === 'year'){ state.year = 'all'; buildYearRail(); }
+    else if(field === 'type'){ state.type = 'all'; buildTypeTabs(); }
+    else if(field === 'category'){ state.category = 'all'; buildCatRail(); }
+    else if(field === 'author'){ state.author = 'all'; buildAuthorRail(); }
+    else if(field === 'favOnly'){ state.favOnly = false; buildTypeTabs(); }
+    else if(field === 'onThisDay'){
+      state.onThisDay = false;
+      var otdEl = onThisDayBanner.querySelector('.otd-banner');
+      if(otdEl){ otdEl.classList.remove('active'); var arrow = document.getElementById('otdArrow'); if(arrow) arrow.textContent = '‹'; }
+    }
+    render(true);
   });
   // استرجاع حالة التصفح من رابط تمت مشاركته (يُقرأ مرة واحدة عند التحميل، قبل أول render)
   function restoreFilterStateFromURL(){

@@ -949,8 +949,10 @@
     var yc = {}, tc = {}, cc = {}, ac = {}, dupHidden = 0;
     ALL.forEach(function(p){
       if(p.date){ var y = p.date.slice(0,4); yc[y] = (yc[y]||0)+1; }
-      tc[p.type] = (tc[p.type]||0)+1;
-      cc[p.category] = (cc[p.category]||0)+1;
+      var effType = p.type_revised || p.type;
+      var effCat = p.category_revised || p.category;
+      tc[effType] = (tc[effType]||0)+1;
+      cc[effCat] = (cc[effCat]||0)+1;
       if(p.author) ac[p.author] = (ac[p.author]||0)+1;
       if(p.duplicate_of) dupHidden++;
     });
@@ -1177,8 +1179,8 @@
       if(!byYear[y]) byYear[y] = { count:0, type:{}, cat:{} };
       var d = byYear[y];
       d.count++;
-      d.type[p.type] = (d.type[p.type]||0) + 1;
-      d.cat[p.category] = (d.cat[p.category]||0) + 1;
+      d.type[p.type_revised || p.type] = (d.type[p.type_revised || p.type]||0) + 1;
+      d.cat[p.category_revised || p.category] = (d.cat[p.category_revised || p.category]||0) + 1;
     });
     return byYear;
   }
@@ -1467,7 +1469,7 @@
     wotdSection.innerHTML = '<div class="wotd-card">' +
       '<div class="wotd-label">✦ كلمة اليوم</div>' +
       '<div class="wotd-text">' + escapeHtml(p.text) + '</div>' +
-      '<div class="wotd-meta">' + p.type + (p.author ? ' · ' + escapeHtml(p.author) : '') + (p.date ? ' · ' + p.date : '') + '</div>' +
+      '<div class="wotd-meta">' + (p.type_revised || p.type) + (p.author ? ' · ' + escapeHtml(p.author) : '') + (p.date ? ' · ' + p.date : '') + '</div>' +
     '</div>';
     wotdSection.querySelector('.wotd-card').addEventListener('click', function(){
       openReadingMode(p.id, [p]);
@@ -1532,8 +1534,8 @@
     return SORTED.filter(function(p){
       if(state.favOnly && !favorites[p.id]) return false;
       if(state.year !== 'all' && (!p.date || p.date.slice(0,4) !== state.year)) return false;
-      if(state.type !== 'all' && p.type !== state.type) return false;
-      if(state.category !== 'all' && p.category !== state.category) return false;
+      if(state.type !== 'all' && (p.type_revised || p.type) !== state.type) return false;
+      if(state.category !== 'all' && (p.category_revised || p.category) !== state.category) return false;
       if(state.author !== 'all' && p.author !== state.author) return false;
       if(state.hideDup && p.duplicate_of) return false;
       if(state.onThisDay && (!p.date || p.date.slice(5,10) !== TODAY_MD)) return false;
@@ -1556,10 +1558,12 @@
 
   function cardHtml(p, q){
     var mediaFlag = p.media ? '<span class="media-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-4-4 3-3-2-6 5"/></svg>مرفق صورة</span>' : '<span></span>';
-    var typeTag = p.type ? '<span class="tag '+(TYPE_CLASS[p.type]||'')+'">'+p.type+'</span>' : '';
-    var catTag = (p.category && p.category !== 'عام' && p.category !== 'صورة بلا نص') ? '<span class="tag tag-cat">'+p.category+'</span>' : '';
+    var effType = p.type_revised || p.type;
+    var effCategory = p.category_revised || p.category;
+    var typeTag = effType ? '<span class="tag '+(TYPE_CLASS[effType]||'')+'">'+effType+'</span>' : '';
+    var catTag = (effCategory && effCategory !== 'عام' && effCategory !== 'صورة بلا نص') ? '<span class="tag tag-cat">'+effCategory+'</span>' : '';
     var authorTag = p.author ? '<span class="tag tag-author">'+escapeHtml(p.author)+'</span>' : '';
-    var motif = MOTIF_CLASS[p.type] || '';
+    var motif = MOTIF_CLASS[effType] || '';
     var isLong = (p.text.split('\n').length > 6) || p.text.length > 340;
     var clampClass = isLong ? ' clamped' : '';
     var readMoreBtn = isLong ? '<button class="read-more-btn" data-more="'+p.id+'">اقرأ المزيد</button>' : '';
@@ -1783,9 +1787,11 @@
     if(idx < 0 || idx >= readingList.length) return;
     readingIndex = idx;
     var p = readingList[idx];
-    modalLabel.textContent = p.type + (p.category && p.category !== 'عام' ? ' · ' + p.category : '');
+    var effType = p.type_revised || p.type;
+    var effCategory = p.category_revised || p.category;
+    modalLabel.textContent = effType + (effCategory && effCategory !== 'عام' ? ' · ' + effCategory : '');
     modalText.textContent = p.text;
-    modalText.classList.toggle('poem-mode', p.type === 'شعر');
+    modalText.classList.toggle('poem-mode', effType === 'شعر');
     modalAuthor.textContent = p.author || '';
     modalAuthor.style.display = p.author ? 'block' : 'none';
     modalDate.textContent = 'أُضيف إلى الأرشيف: ' + formatDate(p.date);

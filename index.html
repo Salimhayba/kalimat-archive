@@ -461,6 +461,9 @@
   .stats-bar-row .v{ width:34px; flex-shrink:0; text-align:left; }
 
   footer.app-footer{ text-align:center; padding: 20px 16px 40px; font-family: var(--sans); font-size: 0.68rem; color: var(--ink-soft); }
+  footer.app-footer .footer-fb{ margin-top:6px; }
+  footer.app-footer .footer-fb a{ color: var(--ink-soft); text-decoration:none; border-bottom:1px solid var(--line); }
+  footer.app-footer .footer-fb a:active{ color: var(--brass); }
 
   .toast{
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
@@ -609,7 +612,7 @@
 
 <div class="overlay" id="overlay">
   <div class="modal">
-    <button class="modal-close" id="modalClose">
+    <button class="modal-close" id="modalClose" aria-label="إغلاق">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
     <div class="modal-label" id="modalLabel">كلمة اليوم</div>
@@ -645,7 +648,10 @@
   <div class="loading-text">جاري تحميل الأرشيف…</div>
 </div>
 
-<footer class="app-footer">أرشيف أوفلاين · %%COUNT%% نص · © سالم عبدالواحد</footer>
+<footer class="app-footer">
+  <div class="footer-line">أرشيف أوفلاين · %%COUNT%% نص · © سالم عبدالواحد</div>
+  <div class="footer-fb"><a href="https://www.facebook.com/share/199PV9SEnb/?mibextid=wwXIfr" target="_blank" rel="noopener">الكتابة والمتابعة على فيسبوك</a></div>
+</footer>
 
 <script>
 (async function(){
@@ -969,7 +975,8 @@
   recomputeCounts();
 
   function updateFooter(){
-    document.querySelector('.app-footer').textContent = 'أرشيف أوفلاين · ' + TOTAL.toLocaleString('ar') + ' نص · © سالم عبدالواحد';
+    var lineEl = document.querySelector('.app-footer .footer-line');
+    if(lineEl) lineEl.textContent = 'أرشيف أوفلاين · ' + TOTAL.toLocaleString('ar') + ' نص · © سالم عبدالواحد';
   }
   updateFooter();
 
@@ -1089,7 +1096,7 @@
   function buildCatRail(){
     var html = '<div class="cat-chip'+(state.category==='all'?' active':'')+'" data-cat="all">كل الأقسام</div>';
     Object.keys(CATEGORY_COUNTS).forEach(function(c){
-      html += '<div class="cat-chip'+(state.category===c?' active':'')+'" data-cat="'+c+'">'+c+' · '+CATEGORY_COUNTS[c].toLocaleString('ar')+'</div>';
+      html += '<div class="cat-chip'+(state.category===c?' active':'')+'" data-cat="'+escapeHtml(c)+'">'+escapeHtml(c)+' · '+CATEGORY_COUNTS[c].toLocaleString('ar')+'</div>';
     });
     catRail.innerHTML = html;
     if(catRail.dataset.bound) return;
@@ -1130,7 +1137,7 @@
     if(!names.length){ authorsToggleBtn.style.display = 'none'; return; }
     var html = '<div class="author-chip'+(state.author==='all'?' active':'')+'" data-author="all">كل المؤلفين</div>';
     names.forEach(function(n){
-      html += '<div class="author-chip'+(state.author===n?' active':'')+'" data-author="'+n+'">'+n+' · '+AUTHOR_COUNTS[n].toLocaleString('ar')+'</div>';
+      html += '<div class="author-chip'+(state.author===n?' active':'')+'" data-author="'+escapeHtml(n)+'">'+escapeHtml(n)+' · '+AUTHOR_COUNTS[n].toLocaleString('ar')+'</div>';
     });
     authorRail.innerHTML = html;
     if(state.author !== 'all'){
@@ -1204,7 +1211,7 @@
           '<span>شعر '+poetry.toLocaleString('ar')+'</span>' +
           '<span>نثر '+prose.toLocaleString('ar')+'</span>' +
           (image ? '<span>صور '+image.toLocaleString('ar')+'</span>' : '') +
-          (topCat ? '<span>أبرز موضوع: '+topCat+'</span>' : '') +
+          (topCat ? '<span>أبرز موضوع: '+escapeHtml(topCat)+'</span>' : '') +
         '</div></div>';
     });
     timelineView.innerHTML = html;
@@ -1367,13 +1374,13 @@
 
     html += '<div class="stats-section-title">أعلى ١٠ مؤلفين</div><div class="stats-list">';
     authorsList.forEach(function(name){
-      html += '<div class="stats-row" data-stat-author="'+name+'"><span>'+name+'</span><span class="c">'+AUTHOR_COUNTS[name].toLocaleString('ar')+'</span></div>';
+      html += '<div class="stats-row" data-stat-author="'+escapeHtml(name)+'"><span>'+escapeHtml(name)+'</span><span class="c">'+AUTHOR_COUNTS[name].toLocaleString('ar')+'</span></div>';
     });
     html += '</div>';
 
     html += '<div class="stats-section-title">الأقسام</div><div class="stats-list">';
     Object.keys(CATEGORY_COUNTS).forEach(function(cat){
-      html += '<div class="stats-row" data-stat-cat="'+cat+'"><span>'+cat+'</span><span class="c">'+CATEGORY_COUNTS[cat].toLocaleString('ar')+'</span></div>';
+      html += '<div class="stats-row" data-stat-cat="'+escapeHtml(cat)+'"><span>'+escapeHtml(cat)+'</span><span class="c">'+CATEGORY_COUNTS[cat].toLocaleString('ar')+'</span></div>';
     });
     html += '</div>';
 
@@ -1482,7 +1489,7 @@
     if(!cats.length){ homeCategories.style.display = 'none'; return; }
     var html = '<div class="home-cat-grid">';
     cats.forEach(function(c){
-      html += '<div class="home-cat-tile" data-cat="'+c+'"><div class="n">'+c+'</div><div class="c">'+CATEGORY_COUNTS[c].toLocaleString('ar')+' مادة</div></div>';
+      html += '<div class="home-cat-tile" data-cat="'+escapeHtml(c)+'"><div class="n">'+escapeHtml(c)+'</div><div class="c">'+CATEGORY_COUNTS[c].toLocaleString('ar')+' مادة</div></div>';
     });
     html += '</div>';
     homeCategories.innerHTML = html;
@@ -1581,9 +1588,9 @@
         '<div class="card-footer">' +
           '<div class="footer-left">' + mediaFlag + '</div>' +
           '<div class="footer-actions">' +
-            '<button class="btn-mini" data-read="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>' +
-            '<button class="'+favClass+'" data-fav="'+p.id+'"><svg viewBox="0 0 24 24" fill="'+favIconFill+'" stroke="currentColor" stroke-width="1.6"><path d="M12 17.3l-5.5 3 1.4-6-4.7-4 6.2-.5L12 4l2.6 5.8 6.2.5-4.7 4 1.4 6z"/></svg></button>' +
-            '<button class="btn-mini" data-share="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg></button>' +
+            '<button class="btn-mini" data-read="'+p.id+'" aria-label="وضع القراءة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>' +
+            '<button class="'+favClass+'" data-fav="'+p.id+'" aria-label="إضافة للمفضلة"><svg viewBox="0 0 24 24" fill="'+favIconFill+'" stroke="currentColor" stroke-width="1.6"><path d="M12 17.3l-5.5 3 1.4-6-4.7-4 6.2-.5L12 4l2.6 5.8 6.2.5-4.7 4 1.4 6z"/></svg></button>' +
+            '<button class="btn-mini" data-share="'+p.id+'" aria-label="مشاركة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg></button>' +
             '<button class="btn-mini" data-copy="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>نسخ</button>' +
           '</div>' +
         '</div>' +

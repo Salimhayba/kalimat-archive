@@ -43,8 +43,11 @@ data.forEach(function(p){
   const year = p.date ? p.date.slice(0,4) : 'unknown';
   (byYear[year] = byYear[year] || []).push(p);
   yearCounts[year] = (yearCounts[year] || 0) + 1;
-  if(p.type) typeCounts[p.type] = (typeCounts[p.type] || 0) + 1;
-  if(p.category) categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+  // نستخدم القيمة الفعّالة (المصحَّحة إن وُجدت) بدل الأصلية دايمًا — نفس مبدأ الواجهة effectiveType/effectiveCategory
+  const effType = p.type_revised || p.type;
+  const effCategory = p.category_revised || p.category;
+  if(effType) typeCounts[effType] = (typeCounts[effType] || 0) + 1;
+  if(effCategory) categoryCounts[effCategory] = (categoryCounts[effCategory] || 0) + 1;
 });
 
 const years = Object.keys(byYear).sort();

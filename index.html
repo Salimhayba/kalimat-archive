@@ -946,7 +946,7 @@
     // تذكير دوري: القرارات محفوظة على هذا الجهاز فقط حتى تُصدَّر فعليًا داخل data.js
     var savedCount = Object.keys(categoryReviews).length;
     if(savedCount > 0 && savedCount % 20 === 0){
-      showToast('راجعت ' + savedCount.toLocaleString('ar') + ' مادة — لا تنسَ تصدير data.js بين فترة وأخرى حتى لا تفقد التقدّم');
+      showToast('راجعت ' + savedCount.toLocaleString('ar') + ' مادة — لا تنسَ تصدير نسخة محدثة بين فترة وأخرى حتى لا تفقد التقدّم');
     }
   }
 
@@ -1544,6 +1544,10 @@
       if(state.type !== 'all' && (p.type_revised || p.type) !== state.type) return false;
       if(state.category !== 'all' && (p.category_revised || p.category) !== state.category) return false;
       if(state.author !== 'all' && p.author !== state.author) return false;
+      // "بدون تكرار" بيخفي بس مجموعات duplicate_type='text_repeat' (نص طويل متطابق فعليًا).
+      // مجموعات duplicate_type='image_series' (زي مجموعة أدهم شرقاوي، ٨٢ سجلًا) عمدًا من غير
+      // duplicate_of/is_duplicate_canonical — كل صورة فيها نص مختلف فعليًا، مش تكرار حقيقي، فمفيش
+      // "أقدم/أحدث" له معنى هنا. القرار ده متعمَّد (راجع duplicate_type في تقرير التكرار)، مش نقص بيانات.
       if(state.hideDup && p.duplicate_of) return false;
       if(state.onThisDay && (!p.date || p.date.slice(5,10) !== TODAY_MD)) return false;
       if(nq && p._norm.indexOf(nq) === -1 && (!p._normTags || p._normTags.indexOf(nq) === -1)) return false;
@@ -1604,6 +1608,9 @@
       currentFiltered = getFiltered();
       state.page = 0;
       feedEl.innerHTML = '';
+      // مزامنة الرابط مع حالة الفلاتر الحالية (بدون إضافة سجل جديد في تاريخ المتصفح لكل تغيير فلتر —
+      // replaceState بس، مش pushState — عشان زرار "رجوع" ميتحوّلش لسلسلة ضغطات فلاتر متراكمة)
+      try{ history.replaceState(null, '', buildFilterStateURL()); }catch(e){}
     }
     // "الصفحة الرئيسية" (كلمة اليوم + التصنيفات) تظهر فقط في الحالة الافتراضية بدون بحث/فلاتر نشطة
     var isHomeState = !state.query && state.year==='all' && state.type==='all' && state.category==='all' && state.author==='all' && !state.favOnly && !state.hideDup && !state.onThisDay;
@@ -2155,10 +2162,12 @@
     var m = location.hash.match(/id=(\d+)/);
     if(!m) return;
     var id = parseInt(m[1], 10);
-    var idx = SORTED.findIndex(function(p){ return p.id === id; });
-    if(idx === -1) return;
-    state.page = Math.floor(idx / state.pageSize) + 1;
+    // نحسب موضع العنصر داخل currentFiltered (نفس المصفوفة اللي بنقصّها فعليًا)، مش داخل SORTED الكاملة —
+    // فرق كبير لو فيه فلتر نشط: عنصر ممكن يكون قريب جدًا من أول القائمة المفلترة رغم إنه بعيد في الأرشيف كله
     currentFiltered = getFiltered();
+    var idx = currentFiltered.findIndex(function(p){ return p.id === id; });
+    if(idx === -1) return; // العنصر مش ضمن الفلتر الحالي (لو فيه فلتر نشط بيستبعده)
+    state.page = Math.floor(idx / state.pageSize) + 1;
     feedEl.innerHTML = currentFiltered.slice(0, state.page*state.pageSize).map(function(p){ return cardHtml(p, ''); }).join('');
     var shownCount2 = Math.min(state.page * state.pageSize, currentFiltered.length);
     loadMoreBtn.textContent = 'تحميل المزيد — عرض ' + shownCount2.toLocaleString('ar') + ' من ' + currentFiltered.length.toLocaleString('ar');
@@ -2185,6 +2194,31 @@
   render(true);
   handleHashDeepLink();
   loadingScreen.style.display = 'none'; // نخفيها هنا فقط، بعد ما كل حاجة (بما فيها التذييل) جاهزة فعلًا للعرض
+
+  // ================= مزامنة زرّي رجوع/تقدّم المتصفح مع الفلاتر =================
+  // لما المستخدم يدوس "رجوع" بعد ما فلتر، لازم الفلاتر ترجع لحالتها السابقة مش تفضل عالقة على آخر حالة
+  window.addEventListener('popstate', function(){
+    timelineView.style.display = 'none';
+    reviewPanel.style.display = 'none';
+    statsPanel.style.display = 'none';
+    timelineBtn.classList.remove('active');
+    reviewBtn.classList.remove('active');
+    statsBtn.classList.remove('active');
+    feedEl.style.display = '';
+
+    state.query = ''; state.year = 'all'; state.type = 'all'; state.category = 'all'; state.author = 'all';
+    state.favOnly = false; state.hideDup = false; state.onThisDay = false; state.page = 0;
+    searchInput.value = '';
+    restoreFilterStateFromURL();
+    // إعادة بناء محتوى الشرائط بس (بلا إعادة ربط مستمعين — كل build تتأكد بنفسها إنها ما تربطش مرتين)
+    buildTypeTabs();
+    buildCatRail();
+    buildYearRail();
+    buildAuthorRail();
+    buildDupToggle();
+    buildOnThisDayBanner();
+    render(true);
+  });
 
   // ================= PWA: register service worker (needs http/https hosting, not file://) =================
   if('serviceWorker' in navigator && location.protocol !== 'file:'){

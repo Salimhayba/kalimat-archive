@@ -1,6 +1,6 @@
 // كلمات أعجبتني — Service Worker
 // نسخة الكاش: غيّر الرقم ده كل ما تحدّث index.html أو أي ملف بيانات (year.json) عشان يوصل التحديث للمستخدمين
-const CACHE_VERSION = 'kalimat-archive-v20';
+const CACHE_VERSION = 'kalimat-archive-v22';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -50,7 +50,7 @@ function isCacheable(url){
   try{
     var u = new URL(url);
     if(u.origin !== self.location.origin) return false;
-    return /\.(html|js|json|json5|css|png|jpg|jpeg|svg|webp|woff2?)$/.test(u.pathname) || u.pathname.endsWith('/');
+    return /\.(html|js|json|json5|css|png|jpg|jpeg|svg|webp|woff2?|mp4|mov|webm|m4v)$/.test(u.pathname) || u.pathname.endsWith('/');
   }catch(e){ return false; }
 }
 self.addEventListener('fetch', function(event){

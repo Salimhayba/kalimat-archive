@@ -353,6 +353,10 @@
   .footer-left{ display:flex; align-items:center; gap:10px; }
   .media-flag{ font-family: var(--sans); font-size: 0.68rem; color: var(--teal); display:flex; align-items:center; gap:4px; }
   .media-flag svg{ width:13px; height:13px; }
+  .card-media{ margin: 2px 0 12px; border-radius: 4px 12px 4px 12px; overflow:hidden; border: 1px solid var(--line); background: rgba(42,30,20,0.04); }
+  .card-media img, .card-media video{ display:block; width:100%; max-height: 420px; object-fit: contain; background: rgba(42,30,20,0.04); }
+  .modal-media{ margin: 0 0 14px; border-radius: 4px 14px 4px 14px; overflow:hidden; border: 1px solid var(--brass); }
+  .modal-media img, .modal-media video{ display:block; width:100%; max-height: 50vh; object-fit: contain; background: rgba(0,0,0,0.15); }
   .footer-actions{ display:flex; align-items:center; gap:4px; }
   .btn-mini{
     font-family: var(--sans); font-size: 0.68rem; color: var(--ink-soft); background:none; border:none; cursor:pointer;
@@ -616,6 +620,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
     <div class="modal-label" id="modalLabel">كلمة اليوم</div>
+    <div class="modal-media" id="modalMedia" style="display:none;"></div>
     <div class="modal-text" id="modalText"></div>
     <div class="modal-author" id="modalAuthor"></div>
     <div class="modal-date" id="modalDate"></div>
@@ -1445,9 +1450,9 @@
     var count = ALL.filter(function(p){ return p.date && p.date.slice(5,10) === TODAY_MD; }).length;
     if(!count){ onThisDayBanner.style.display = 'none'; return; }
     onThisDayBanner.style.display = 'block';
-    onThisDayBanner.innerHTML = '<div class="otd-banner" id="otdBtn">' +
+    onThisDayBanner.innerHTML = '<div class="otd-banner'+(state.onThisDay ? ' active' : '')+'" id="otdBtn">' +
       '<span>🗓️ في مثل هذا اليوم عبر السنوات: ' + count.toLocaleString('ar') + ' مادة</span>' +
-      '<span id="otdArrow">‹</span></div>';
+      '<span id="otdArrow">'+(state.onThisDay ? '✕' : '‹')+'</span></div>';
     onThisDayBanner.querySelector('#otdBtn').addEventListener('click', function(){
       state.onThisDay = !state.onThisDay;
       state.page = 0;
@@ -1546,7 +1551,8 @@
       if(state.author !== 'all' && p.author !== state.author) return false;
       // "بدون تكرار" بيخفي بس مجموعات duplicate_type='text_repeat' (نص طويل متطابق فعليًا).
       // مجموعات duplicate_type='image_series' (زي مجموعة أدهم شرقاوي، ٨٢ سجلًا) عمدًا من غير
-      // duplicate_of/is_duplicate_canonical — كل صورة فيها نص مختلف فعليًا، مش تكرار حقيقي، فمفيش
+      // duplicate_of/is_duplicate_canonical — كل صورة فيها وسيط (ملف صورة) مختلف فعليًا رغم
+      // تطابق التسمية النصية، فمش تكرار حقيقي، وفمفيش
       // "أقدم/أحدث" له معنى هنا. القرار ده متعمَّد (راجع duplicate_type في تقرير التكرار)، مش نقص بيانات.
       if(state.hideDup && p.duplicate_of) return false;
       if(state.onThisDay && (!p.date || p.date.slice(5,10) !== TODAY_MD)) return false;
@@ -1567,8 +1573,20 @@
   var TYPE_CLASS = {'شعر':'tag-poetry','نثر':'tag-prose','صورة':'tag-image'};
   var MOTIF_CLASS = {'شعر':'motif-شعر','نثر':'motif-نثر','صورة':'motif-صورة'};
 
+  // يبني وسم <img> أو <video> حسب امتداد الملف — كل ملفات الوسائط داخل مجلد media/ مسطّح بلا مجلدات فرعية
+  var VIDEO_EXTS = ['mp4','mov','webm','m4v'];
+  function mediaHtml(mediaName){
+    if(!mediaName) return '';
+    var ext = (mediaName.split('.').pop() || '').toLowerCase();
+    var src = 'media/' + mediaName;
+    if(VIDEO_EXTS.indexOf(ext) !== -1){
+      return '<video controls preload="none" playsinline src="'+src+'"></video>';
+    }
+    return '<img loading="lazy" src="'+src+'" alt="">';
+  }
+
   function cardHtml(p, q){
-    var mediaFlag = p.media ? '<span class="media-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-4-4 3-3-2-6 5"/></svg>مرفق صورة</span>' : '<span></span>';
+    var cardMedia = p.media ? '<div class="card-media">' + mediaHtml(p.media) + '</div>' : '';
     var effType = p.type_revised || p.type;
     var effCategory = p.category_revised || p.category;
     var typeTag = effType ? '<span class="tag '+(TYPE_CLASS[effType]||'')+'">'+effType+'</span>' : '';
@@ -1587,10 +1605,11 @@
         '<div class="card-date"><span class="dot"></span>' + formatDate(p.date) +
           (hijri ? ' <span class="hijri">· '+hijri+'</span>' : '') +
           typeTag + catTag + authorTag + '</div>' +
+        cardMedia +
         '<div class="card-text'+clampClass+'" data-text-id="'+p.id+'">' + highlight(p, q) + '</div>' +
         readMoreBtn +
         '<div class="card-footer">' +
-          '<div class="footer-left">' + mediaFlag + '</div>' +
+          '<div class="footer-left"></div>' +
           '<div class="footer-actions">' +
             '<button class="btn-mini" data-read="'+p.id+'" aria-label="وضع القراءة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>' +
             '<button class="'+favClass+'" data-fav="'+p.id+'" aria-label="إضافة للمفضلة"><svg viewBox="0 0 24 24" fill="'+favIconFill+'" stroke="currentColor" stroke-width="1.6"><path d="M12 17.3l-5.5 3 1.4-6-4.7-4 6.2-.5L12 4l2.6 5.8 6.2.5-4.7 4 1.4 6z"/></svg></button>' +
@@ -1778,6 +1797,7 @@
   }
 
   var overlay = document.getElementById('overlay');
+  var modalMedia = document.getElementById('modalMedia');
   var modalText = document.getElementById('modalText');
   var modalDate = document.getElementById('modalDate');
   var modalLabel = document.getElementById('modalLabel');
@@ -1804,6 +1824,13 @@
     var effType = p.type_revised || p.type;
     var effCategory = p.category_revised || p.category;
     modalLabel.textContent = effType + (effCategory && effCategory !== 'عام' ? ' · ' + effCategory : '');
+    if(p.media){
+      modalMedia.innerHTML = mediaHtml(p.media);
+      modalMedia.style.display = '';
+    } else {
+      modalMedia.innerHTML = '';
+      modalMedia.style.display = 'none';
+    }
     modalText.textContent = p.text;
     modalText.classList.toggle('poem-mode', effType === 'شعر');
     modalAuthor.textContent = p.author || '';
@@ -2111,6 +2138,7 @@
     if(state.author !== 'all') params.set('author', state.author);
     if(state.favOnly) params.set('fav', '1');
     if(state.hideDup) params.set('hideDup', '1');
+    if(state.onThisDay) params.set('otd', '1');
     var qs = params.toString();
     return location.origin + location.pathname + (qs ? '?' + qs : '');
   }
@@ -2154,6 +2182,7 @@
     var author = params.get('author'); if(author && AUTHOR_COUNTS[author] !== undefined) state.author = author;
     if(params.get('fav') === '1') state.favOnly = true;
     if(params.get('hideDup') === '1') state.hideDup = true;
+    if(params.get('otd') === '1') state.onThisDay = true;
     return true;
   }
 
@@ -2198,6 +2227,7 @@
   // ================= مزامنة زرّي رجوع/تقدّم المتصفح مع الفلاتر =================
   // لما المستخدم يدوس "رجوع" بعد ما فلتر، لازم الفلاتر ترجع لحالتها السابقة مش تفضل عالقة على آخر حالة
   window.addEventListener('popstate', function(){
+    overlay.classList.remove('show'); // إغلاق وضع القراءة لو كان مفتوحًا وقت الرجوع
     timelineView.style.display = 'none';
     reviewPanel.style.display = 'none';
     statsPanel.style.display = 'none';

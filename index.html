@@ -1798,6 +1798,7 @@
 
   var overlay = document.getElementById('overlay');
   var modalMedia = document.getElementById('modalMedia');
+  var modalShareImgBtn = document.getElementById('modalShareImgBtn');
   var modalText = document.getElementById('modalText');
   var modalDate = document.getElementById('modalDate');
   var modalLabel = document.getElementById('modalLabel');
@@ -1832,6 +1833,9 @@
       modalMedia.style.display = 'none';
     }
     modalText.textContent = p.text;
+    // "مشاركة كصورة" ترسم النص فقط ولا تتعامل مع الوسيط — تُخفى لمنشورات نوع "صورة" (نص فارغ عمدًا)
+    // كي لا تُنتج صورة مشاركة شبه خالية بلا أي محتوى فعلي
+    modalShareImgBtn.style.display = p.text ? '' : 'none';
     modalText.classList.toggle('poem-mode', effType === 'شعر');
     modalAuthor.textContent = p.author || '';
     modalAuthor.style.display = p.author ? 'block' : 'none';

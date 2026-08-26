@@ -439,6 +439,10 @@
   .back-to-top svg{ width:20px; height:20px; }
   #statsBtn.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
   .stats-panel{ padding: 10px 4px 24px; }
+  .about-content{ padding: 4px 18px 10px; font-size: 1.05rem; line-height: 2; color: var(--ink); }
+  .about-content p{ margin: 0 0 1.1em; }
+  .about-content a{ color: var(--brass-deep); }
+  .about-btn-row{ text-align:center; margin-top: 22px; }
   .stats-hero{ text-align:center; padding: 18px 10px 22px; }
   .stats-hero .n{ font-family: var(--serif); font-size: 2.6rem; color: var(--brass-deep); font-weight:700; }
   .stats-hero .l{ font-family: var(--sans); font-size: 0.78rem; color: var(--ink-soft); margin-top:4px; }
@@ -583,6 +587,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/></svg>
             الأرشيف بالأرقام
           </button>
+          <button class="more-menu-item" id="aboutBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg>
+            عن الأرشيف
+          </button>
         </div>
       </div>
       <input type="file" id="importFile" accept=".json" multiple style="display:none;">
@@ -609,6 +617,7 @@
   <div class="timeline-view" id="timelineView" style="display:none;"></div>
   <div class="review-panel" id="reviewPanel" style="display:none;"></div>
   <div class="stats-panel" id="statsPanel" style="display:none;"></div>
+  <div class="stats-panel" id="aboutPanel" style="display:none;"></div>
   <div class="wotd-section" id="wotdSection" style="display:none;"></div>
   <div class="home-categories" id="homeCategories" style="display:none;"></div>
   <div class="on-this-day" id="onThisDayBanner" style="display:none;"></div>
@@ -1443,6 +1452,59 @@
     else showFeedViewFromStats();
   });
 
+  // ================= عن الأرشيف =================
+  var aboutPanel = document.getElementById('aboutPanel');
+  var aboutBtn = document.getElementById('aboutBtn');
+  var ABOUT_SEEN_KEY = 'kalimat_about_seen_v1';
+  function buildAboutPanel(){
+    var html = '<button class="timeline-back" id="aboutBackBtn">← رجوع إلى الأرشيف</button>';
+    html += '<div class="about-content">' +
+      '<p>منذ عام ٢٠١٢، وأنا أفعل شيئًا لا يبدو في حينه أنه يستحق الذكر: كلما مرّت بي كلمة أوقفتني — بيت شعر، سطر نثر، خاطرة عابرة، حكمة قرأتها في مكان ما ثم لم أستطع المضي قبل أن أحفظها — كتبتها تحت وسم واحد: #كلمات_أعجبتني.</p>' +
+      '<p>لم يكن مشروعًا. كان عادة صغيرة، بلا خطة، بلا غاية أبعد من أن أحتفظ بما أعجبني قبل أن يطويه الزمن كما يطوي كل شيء عابر.</p>' +
+      '<p>أربعة عشر عامًا مرّت وأنا أفعل هذا دون أن ألتفت إلى حجم ما يتجمّع خلفي، حتى وجدت نفسي يومًا أمام أكثر من ثمانية آلاف مادة، متناثرة بين منشورات لا يجمعها سوى أنها أعجبتني في لحظة ما.</p>' +
+      '<p>شعرت أن هذا الكمّ يستحق أكثر من أن يبقى مدفونًا في تمرير لا نهاية له. فقررت أن أجمعه، أن أرتّبه، أن أمنحه بيتًا يليق به — أرشيفًا يمكن التجوّل فيه، والبحث فيه، والعودة إليه كلما احتجت كلمة تشبه لحظة تعيشها.</p>' +
+      '<p>هذا هو أرشيف كلمات أعجبتني: أكثر من ثمانية آلاف مادة بين شعر ونثر وصور، ممتدة من ٢٠١٢ حتى اليوم.</p>' +
+      '<p>تستطيع البحث فيه بالعربية، بلا قيود التشكيل أو رسم الحروف، وتتصفّح حسب السنة أو المؤلف أو الموضوع، وتحفظ ما يلامسك في مفضّلتك، أو تفتحه كل يوم لترى «كلمة اليوم» التي اختارها لك الأرشيف نفسه.</p>' +
+      '<p>وإن كنت من محبي الصدف، ستجد قسم «في مثل هذا اليوم»، يذكّرك بما كتبته أو اقتبسته في نفس التاريخ عبر سنوات مختلفة — وكأن الأرشيف يتحدّث إليك بلغتك أنت.</p>' +
+      '<p>وبنيته ببساطة، كصفحة واحدة خفيفة، بلا أطر عمل خارجية، لتظل الكلمات قريبة منك حتى بلا إنترنت بعد زيارتك الأولى، ويمكنك إضافته كاختصار على هاتفك أو حاسوبك؛ لأن ما يستحق أن يُحفظ، يستحق أن يبقى في متناولك.</p>' +
+      '<p>ولعلّك تجد بين هذه الكلمات ما أعجبك أنت أيضًا.</p>' +
+      '</div>' +
+      '<div class="about-btn-row"><button class="timeline-back" id="aboutStartBtn">ابدأ التصفح ←</button></div>';
+    aboutPanel.innerHTML = html;
+    if(!aboutPanel.dataset.bound){
+      aboutPanel.dataset.bound = '1';
+      aboutPanel.addEventListener('click', function(e){
+        if(e.target.id === 'aboutBackBtn' || e.target.id === 'aboutStartBtn') showFeedViewFromAbout();
+      });
+    }
+  }
+  function showAboutView(){
+    buildAboutPanel();
+    aboutPanel.style.display = 'block';
+    timelineView.style.display = 'none';
+    reviewPanel.style.display = 'none';
+    statsPanel.style.display = 'none';
+    reviewBtn.classList.remove('active');
+    timelineBtn.classList.remove('active');
+    statsBtn.classList.remove('active');
+    feedEl.style.display = 'none';
+    loadMoreBtn.style.display = 'none';
+    if(wotdSection) wotdSection.style.display = 'none';
+    if(homeCategories) homeCategories.style.display = 'none';
+    onThisDayBanner.style.display = 'none';
+    aboutBtn.classList.add('active');
+  }
+  function showFeedViewFromAbout(){
+    aboutPanel.style.display = 'none';
+    aboutBtn.classList.remove('active');
+    state.page = 0;
+    showFeedView();
+  }
+  aboutBtn.addEventListener('click', function(){
+    if(aboutPanel.style.display === 'none' || !aboutPanel.style.display) showAboutView();
+    else showFeedViewFromAbout();
+  });
+
   // ================= في مثل هذا اليوم =================
   var now = new Date();
   var TODAY_MD = String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
@@ -2231,6 +2293,15 @@
   handleHashDeepLink();
   loadingScreen.style.display = 'none'; // نخفيها هنا فقط، بعد ما كل حاجة (بما فيها التذييل) جاهزة فعلًا للعرض
 
+  // عرض "عن الأرشيف" تلقائيًا مرة واحدة فقط لأول زيارة لكل جهاز — بعد اكتمال التهيئة بالكامل
+  // كي لا تُستخدَم عناصر (onThisDayBanner وغيرها) قبل تعريفها
+  try{
+    if(!localStorage.getItem(ABOUT_SEEN_KEY)){
+      showAboutView();
+      localStorage.setItem(ABOUT_SEEN_KEY, '1');
+    }
+  }catch(e){}
+
   // ================= مزامنة زرّي رجوع/تقدّم المتصفح مع الفلاتر =================
   // لما المستخدم يدوس "رجوع" بعد ما فلتر، لازم الفلاتر ترجع لحالتها السابقة مش تفضل عالقة على آخر حالة
   window.addEventListener('popstate', function(){
@@ -2238,9 +2309,11 @@
     timelineView.style.display = 'none';
     reviewPanel.style.display = 'none';
     statsPanel.style.display = 'none';
+    aboutPanel.style.display = 'none';
     timelineBtn.classList.remove('active');
     reviewBtn.classList.remove('active');
     statsBtn.classList.remove('active');
+    aboutBtn.classList.remove('active');
     feedEl.style.display = '';
 
     state.query = ''; state.year = 'all'; state.type = 'all'; state.category = 'all'; state.author = 'all';

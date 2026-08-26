@@ -1,6 +1,6 @@
 // كلمات أعجبتني — Service Worker
 // نسخة الكاش: غيّر الرقم ده كل ما تحدّث index.html أو أي ملف بيانات (year.json) عشان يوصل التحديث للمستخدمين
-const CACHE_VERSION = 'kalimat-archive-v24';
+const CACHE_VERSION = 'kalimat-archive-v25';
 const CORE_ASSETS = [
   './',
   './index.html',

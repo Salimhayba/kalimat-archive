@@ -211,9 +211,9 @@
   .more-menu-item.active svg{ color: var(--parchment); }
   #timelineBtn.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
 
-  .type-tabs{ display:flex; gap:8px; padding: 12px 4px 2px; }
+  .type-tabs{ display:flex; flex-wrap:wrap; gap:8px; padding: 12px 4px 2px; }
   .type-tab{
-    flex:1; text-align:center; font-family: var(--serif); font-size: 0.98rem; font-weight: 700;
+    flex:1 1 62px; text-align:center; font-family: var(--serif); font-size: 0.98rem; font-weight: 700;
     padding: 9px 6px; border-radius: 10px; border: 1px solid var(--line);
     background: rgba(255,252,244,0.4); color: var(--ink-soft); cursor:pointer;
   }
@@ -224,6 +224,20 @@
   .type-tab.active[data-type="شعر"]{ background: var(--teal); border-color: var(--teal); }
   .type-tab.active[data-type="نثر"]{ background: var(--rubric); border-color: var(--rubric); }
   .type-tab.active[data-type="fav"]{ background: var(--rubric); border-color: var(--rubric); }
+  /* زر «أُضيف حديثًا» داخل شريط التبويبات نفسه: إطار ونبرة نحاسية تميّزه عن التبويبات،
+     وأساس مرن أعرض (150px) فيلتفّ لسطر مستقل بعرض كامل على الشاشات الضيقة بدل أن ينضغط */
+  .type-tab.recent-chip{
+    flex:1 1 150px; display:flex; align-items:center; justify-content:center; gap:7px;
+    border-color: var(--brass); color: var(--brass-deep); background: rgba(163,121,63,0.10);
+  }
+  body.dark .type-tab.recent-chip{ background: rgba(201,160,95,0.14); color: var(--brass-deep); }
+  .type-tab.recent-chip.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
+  body.dark .type-tab.recent-chip.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
+  .recent-badge{
+    font-family: var(--sans); font-weight:700; font-size: 0.66rem; line-height: 1;
+    background: var(--brass); color: var(--parchment); border-radius: 999px; padding: 3px 8px;
+  }
+  .type-tab.recent-chip.active .recent-badge{ background: var(--parchment); color: var(--brass-deep); }
 
   .cat-rail, .year-rail, .author-rail{
     display:flex; gap:6px; overflow-x:auto; padding: 8px 4px 2px;
@@ -1228,6 +1242,19 @@
     if(moreMenu.style.display !== 'none' && !e.target.closest('.more-menu-wrap')) closeMoreMenu();
   });
 
+  // زر «أُضيف حديثًا» داخل شريط تبويبات النوع نفسه (مدخل رئيسي بارز، بدل الاكتفاء بعنصر
+  // قائمة "المزيد"): يُبنى مع الشريط في كل إعادة بناء، بشارة بعدد مواد آخر دفعة من
+  // meta.json (تختفي الشارة وحدها لو العدد صفر/غائب)، وحالته النشطة تُزامَن مع #recentBtn
+  function recentChipHtml(){
+    var open = (typeof recentPanel !== 'undefined' && recentPanel && recentPanel.style.display && recentPanel.style.display !== 'none');
+    var badge = ARCHIVE_LAST_UPDATE_COUNT ? '<span class="recent-badge">'+ARCHIVE_LAST_UPDATE_COUNT.toLocaleString('ar')+'</span>' : '';
+    return '<div class="type-tab recent-chip'+(open?' active':'')+'" data-recent="1" role="button" aria-label="أُضيف حديثًا">أُضيف حديثًا'+badge+'</div>';
+  }
+  function setRecentChipActive(on){
+    var chip = typeTabs.querySelector('.recent-chip');
+    if(chip) chip.classList.toggle('active', !!on);
+  }
+
   function buildTypeTabs(){
     var defs = [
       {key:'all', label:'الكل', n: TOTAL},
@@ -1238,12 +1265,24 @@
     typeTabs.innerHTML = defs.map(function(d){
       var isActive = state.favOnly ? d.key==='fav' : (state.type===d.key);
       return '<div class="type-tab'+(isActive?' active':'')+'" data-type="'+d.key+'">'+d.label+'<span class="n">'+d.n.toLocaleString('ar')+'</span></div>';
-    }).join('');
+    }).join('') + recentChipHtml();
     if(typeTabs.dataset.bound) return;
     typeTabs.dataset.bound = '1';
     typeTabs.addEventListener('click', function(e){
+      var recentChip = e.target.closest('.recent-chip');
+      if(recentChip){
+        // نفس مسار زر القائمة #recentBtn بالضبط (تبديل فتح/إغلاق) — و stopImmediatePropagation
+        // يحمي التبديل من مستمع مكرر قد يُربط بعد استيراد تحديثات (dataset.bound تُصفَّر هناك)
+        e.stopImmediatePropagation();
+        if(recentPanel.style.display === 'none' || !recentPanel.style.display) showRecentView();
+        else showFeedViewFromRecent();
+        return;
+      }
       var tab = e.target.closest('.type-tab');
       if(!tab) return;
+      // اختيار أي تبويب نوع أثناء فتح «أُضيف حديثًا» يعود بعرض الأرشيف الرئيسي:
+      // الزر والتبويبات في الشريط نفسه وجهات متنافية
+      if(recentPanel.style.display && recentPanel.style.display !== 'none') showFeedViewFromRecent();
       var key = tab.getAttribute('data-type');
       if(key === 'fav'){
         state.favOnly = !state.favOnly;
@@ -1462,6 +1501,7 @@
     statsPanel.style.display = 'none';
     recentPanel.style.display = 'none';
     recentBtn.classList.remove('active');
+    setRecentChipActive(false);
     reviewBtn.classList.remove('active');
     statsBtn.classList.remove('active');
     feedEl.style.display = 'none';
@@ -1481,6 +1521,7 @@
     reviewBtn.classList.remove('active');
     statsBtn.classList.remove('active');
     recentBtn.classList.remove('active');
+    setRecentChipActive(false);
     buildOnThisDayBanner();
     render(true);
   }
@@ -1551,6 +1592,7 @@
     statsPanel.style.display = 'none';
     recentPanel.style.display = 'none';
     recentBtn.classList.remove('active');
+    setRecentChipActive(false);
     statsBtn.classList.remove('active');
     feedEl.style.display = 'none';
     loadMoreBtn.style.display = 'none';
@@ -1647,6 +1689,7 @@
     reviewPanel.style.display = 'none';
     recentPanel.style.display = 'none';
     recentBtn.classList.remove('active');
+    setRecentChipActive(false);
     reviewBtn.classList.remove('active');
     timelineBtn.classList.remove('active');
     feedEl.style.display = 'none';
@@ -1702,6 +1745,7 @@
     statsPanel.style.display = 'none';
     recentPanel.style.display = 'none';
     recentBtn.classList.remove('active');
+    setRecentChipActive(false);
     reviewBtn.classList.remove('active');
     timelineBtn.classList.remove('active');
     statsBtn.classList.remove('active');
@@ -1789,6 +1833,7 @@
     statsBtn.classList.remove('active');
     aboutBtn.classList.remove('active');
     recentBtn.classList.add('active');
+    setRecentChipActive(true);
     window.scrollTo({top:0});
   }
   function showFeedViewFromRecent(){
@@ -2751,6 +2796,7 @@
     statsBtn.classList.remove('active');
     aboutBtn.classList.remove('active');
     recentBtn.classList.remove('active');
+    setRecentChipActive(false);
     feedEl.style.display = '';
 
     state.query = ''; state.year = 'all'; state.type = 'all'; state.category = 'all'; state.author = 'all';

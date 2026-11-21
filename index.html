@@ -168,7 +168,7 @@
 
   .controls{
     padding: 16px 16px 8px; position: sticky; top:0; z-index: 10;
-    background: linear-gradient(180deg, var(--glass-bg) 78%, rgba(239,230,211,0));
+    background: linear-gradient(180deg, var(--glass-bg) 78%, transparent);
     -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
   }
   .search-row{ display:flex; gap:8px; align-items:center; }
@@ -195,7 +195,8 @@
   .more-menu-wrap{ position:relative; flex-shrink:0; }
   .more-menu{
     position:absolute; top:50px; inset-inline-end:0; z-index:20; min-width:210px;
-    background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    /* خلفية شبه مصمتة: الزجاج الشفاف القديم كان يُظهر النصوص خلف القائمة فتصعب قراءتها */
+    background: var(--parchment-deep); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
     border:1px solid var(--glass-border); border-radius:12px; padding:6px; box-shadow: var(--card-shadow);
     display:flex; flex-direction:column; gap:2px;
   }
@@ -353,11 +354,12 @@
     font-size: 1.12rem; line-height: 2; white-space: pre-wrap; word-break: break-word; color: var(--ink);
     position: relative;
   }
-  .card-text.clamped{ max-height: 8.6em; overflow: hidden; }
-  .card-text.clamped::after{
-    content:""; position:absolute; bottom:0; right:0; left:0; height: 2.6em;
-    background: linear-gradient(180deg, transparent, var(--card-bg) 85%);
-    pointer-events:none;
+  .card-text.clamped{
+    max-height: 8.6em; overflow: hidden;
+    /* تلاشي النص نفسه تدريجيًا بدل شريط لوني فوقه — الشريط القديم كان يبدو
+       كتلة مصمتة تغطي آخر سطر، أما القناع فيعمل على أي خلفية وفي كل الأوضاع */
+    -webkit-mask-image: linear-gradient(180deg, #000 68%, transparent 99%);
+    mask-image: linear-gradient(180deg, #000 68%, transparent 99%);
   }
   .card-text mark{ background: rgba(163,121,63,0.28); color: inherit; border-radius: 2px; }
 
@@ -414,7 +416,8 @@
   .modal-text.poem-mode{ line-height: 2.5; letter-spacing: 0.2px; }
   .modal-date{ font-family: var(--sans); font-size: 0.7rem; color: var(--ink-soft); text-align:center; margin-top:14px; }
   .modal-meta-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:8px; }
-  .modal-stars{ display:flex; justify-content:center; gap:6px; margin-top:16px; }
+  .modal-stars{ display:flex; justify-content:center; gap:6px; margin-top:4px; }
+  .modal-stars-label{ font-family: var(--sans); font-size: 0.7rem; color: var(--ink-soft); text-align:center; margin-top:16px; letter-spacing:0.3px; }
   .modal-star{ font-size:1.3rem; line-height:1; cursor:pointer; color: var(--line); background:none; border:none; padding:2px; }
   .modal-star.on{ color: var(--brass); }
   .modal-nav{
@@ -459,7 +462,13 @@
   .back-to-top svg{ width:20px; height:20px; }
   #statsBtn.active{ background: var(--brass); border-color: var(--brass); color: var(--parchment); }
   .stats-panel{ padding: 10px 4px 24px; }
-  .about-content{ padding: 4px 18px 10px; font-size: 1.05rem; line-height: 2; color: var(--ink); }
+  /* سطح بطاقة مُعرّف تحت نص «عن الأرشيف» حتى يظل مقروءًا على أي خلفية وفي كل الأوضاع */
+  .about-content{ padding: 14px 18px 6px; font-size: 1.05rem; line-height: 2; color: var(--ink); background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 6px 18px 6px 18px; }
+  /* تقوية تباين الترويسة في الأوضاع الفاتحة (العنوان والعنوان الفرعي بأغمق درجات الحبر) */
+  body:not(.dark) h1.title{ color: #241a12; }
+  body:not(.dark) .subtitle{ color: #3d2c1c; }
+  body.sepia h1.title{ color: #43331f; }
+  body.sepia .subtitle{ color: #5c4630; }
   .about-content p{ margin: 0 0 1.1em; }
   .about-content a{ color: var(--brass-deep); }
   .about-btn-row{ text-align:center; margin-top: 22px; }
@@ -656,6 +665,7 @@
     <div class="modal-text" id="modalText"></div>
     <div class="modal-author" id="modalAuthor"></div>
     <div class="modal-date" id="modalDate"></div>
+    <div class="modal-stars-label" id="modalStarsLabel">قيّم هذه الكلمة</div>
     <div class="modal-stars" id="modalStars"></div>
     <div class="modal-share-row">
       <button class="modal-share-btn" id="modalShareImgBtn">
@@ -988,7 +998,33 @@
   }
 
   var YEAR_COUNTS, TYPE_COUNTS, CATEGORY_COUNTS, AUTHOR_COUNTS, DUP_HIDDEN_COUNT, TOTAL;
+  // توحيد أسماء المؤلفين: دمج الصور الإملائية المختلفة لنفس الاسم (تطويل،
+  // ى/ي، ة/ه، تشكيل) تحت اسم عرض واحد — في الذاكرة فقط، دون تعديل ملفات
+  // البيانات. اسم العرض هو الصورة الأكثر ورودًا (وعند التعادل: الخالية من التطويل)
+  function authorGroupKey(name){
+    return (name || '').replace(/[ـً-ٰٟ]/g, '').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
+  }
+  function canonicalizeAuthors(){
+    var variants = {};
+    ALL.forEach(function(p){
+      if(!p.author) return;
+      var k = authorGroupKey(p.author);
+      variants[k] = variants[k] || {};
+      variants[k][p.author] = (variants[k][p.author] || 0) + 1;
+    });
+    var display = {};
+    Object.keys(variants).forEach(function(k){
+      var names = Object.keys(variants[k]);
+      names.sort(function(a, b){
+        if(variants[k][b] !== variants[k][a]) return variants[k][b] - variants[k][a];
+        return (a.indexOf('ـ') !== -1 ? 1 : 0) - (b.indexOf('ـ') !== -1 ? 1 : 0);
+      });
+      display[k] = names[0];
+    });
+    ALL.forEach(function(p){ if(p.author) p.author = display[authorGroupKey(p.author)]; });
+  }
   function recomputeCounts(){
+    canonicalizeAuthors();
     var yc = {}, tc = {}, cc = {}, ac = {}, dupHidden = 0;
     ALL.forEach(function(p){
       if(p.date){ var y = p.date.slice(0,4); yc[y] = (yc[y]||0)+1; }
@@ -1576,7 +1612,7 @@
     wotdSection.innerHTML = '<div class="wotd-card">' +
       '<div class="wotd-label">✦ كلمة اليوم</div>' +
       '<div class="wotd-text">' + escapeHtml(p.text) + '</div>' +
-      '<div class="wotd-meta">' + (p.type_revised || p.type) + (p.author ? ' · ' + escapeHtml(p.author) : '') + (p.date ? ' · ' + p.date : '') + '</div>' +
+      '<div class="wotd-meta">' + (p.type_revised || p.type) + (p.author ? ' · ' + escapeHtml(p.author) : '') + (p.date ? ' · نُشرت في ' + p.date : '') + '</div>' +
     '</div>';
     wotdSection.querySelector('.wotd-card').addEventListener('click', function(){
       openReadingMode(p.id, [p]);
@@ -1806,6 +1842,24 @@
     toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 3200);
   }
 
+  // مشاركة برابط مع تأكيد مرئي دائمًا: لو تعذّرت المشاركة الأصلية أو رفضها
+  // المتصفح، نرجع لنسخ الرابط + Toast — بدل ابتلاع الخطأ بصمت فلا يرى
+  // المستخدم أي نتيجة (إلغاء المستخدم نفسه من نافذة المشاركة لا يُحتسب فشلًا)
+  function shareOrCopy(shareData, copyUrl, toastMsg){
+    var doCopy = function(){
+      var done = function(){ showToast(toastMsg); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(copyUrl).then(done).catch(function(){ fallbackCopy(copyUrl, done); });
+      } else { fallbackCopy(copyUrl, done); }
+    };
+    if(navigator.share){
+      navigator.share(shareData).catch(function(err){
+        if(err && err.name === 'AbortError') return;
+        doCopy();
+      });
+    } else { doCopy(); }
+  }
+
   // ================= Feed interactions (delegate) =================
   feedEl.addEventListener('click', function(e){
     var copyBtn = e.target.closest('[data-copy]');
@@ -1848,13 +1902,8 @@
       var id3 = parseInt(shareBtn.getAttribute('data-share'), 10);
       var post3 = ALL.find(function(p){ return p.id === id3; });
       var url = location.href.split('#')[0] + '#id=' + id3;
-      var doneShare = function(){ showToast('تم نسخ رابط النص'); };
-      if(navigator.share){
-        var shareText = post3 ? (post3.text.length > 200 ? post3.text.slice(0,200) + '…' : post3.text) : '';
-        navigator.share({title:'كلمات أعجبتني', text:shareText, url:url}).catch(function(){});
-      } else if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(url).then(doneShare).catch(function(){ fallbackCopy(url, doneShare); });
-      } else { fallbackCopy(url, doneShare); }
+      var shareText = post3 ? (post3.text.length > 200 ? post3.text.slice(0,200) + '…' : post3.text) : '';
+      shareOrCopy({title:'كلمات أعجبتني', text:shareText, url:url}, url, 'تم نسخ رابط النص');
       return;
     }
     if(moreBtn){
@@ -1908,7 +1957,7 @@
     var current = (ALL_BY_ID[id] && ALL_BY_ID[id].rating) || 0;
     var html = '';
     for(var i=1; i<=5; i++){
-      html += '<button class="modal-star'+(i<=current ? ' on' : '')+'" data-star="'+i+'">★</button>';
+      html += '<button class="modal-star'+(i<=current ? ' on' : '')+'" data-star="'+i+'" aria-label="تقييم '+i+' من ٥">★</button>';
     }
     modalStars.innerHTML = html;
   }
@@ -2043,16 +2092,20 @@
     canvas.toBlob(function(blob){
       if(!blob) return;
       var file = new File([blob], 'kalimat-' + p.id + '.png', {type:'image/png'});
-      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-        navigator.share({files:[file], title:'كلمات أعجبتني'}).catch(function(){});
-      } else {
+      var downloadImg = function(){
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url; a.download = 'kalimat-' + p.id + '.png';
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
         setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
         showToast('تم تنزيل الصورة');
-      }
+      };
+      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+        navigator.share({files:[file], title:'كلمات أعجبتني'}).catch(function(err){
+          if(err && err.name === 'AbortError') return;
+          downloadImg();
+        });
+      } else { downloadImg(); }
     }, 'image/png');
   });
 
@@ -2244,12 +2297,7 @@
   }
   shareFilterBtn.addEventListener('click', function(){
     var url = buildFilterStateURL();
-    var done = function(){ showToast('تم نسخ رابط هذا العرض'); };
-    if(navigator.share){
-      navigator.share({title:'كلمات أعجبتني', url:url}).catch(function(){});
-    } else if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(done).catch(function(){ fallbackCopy(url, done); });
-    } else { fallbackCopy(url, done); }
+    shareOrCopy({title:'كلمات أعجبتني', url:url}, url, 'تم نسخ رابط هذا العرض');
   });
 
   // إلغاء فلتر منفرد من شارات الفلاتر النشطة

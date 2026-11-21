@@ -524,6 +524,11 @@
   .recent-count{ font-family: var(--serif); font-size: 1.7rem; font-weight:700; color: var(--brass-deep); }
   .recent-updated{ font-family: var(--sans); font-size: 0.78rem; color: var(--ink-soft); margin-top: 4px; }
   .recent-desc{ font-family: var(--sans); font-size: 0.8rem; color: var(--ink-soft); margin-top: 8px; }
+  .recent-toggle{ display:inline-flex; gap:4px; margin-top:12px; border:1px solid var(--brass); border-radius:999px; padding:3px; }
+  .recent-toggle button{ font-family: var(--sans); font-size:0.78rem; font-weight:600; border:none; background:transparent; color: var(--brass-deep); padding:6px 14px; border-radius:999px; cursor:pointer; }
+  .recent-toggle button.active{ background: var(--brass); color: var(--parchment); }
+  .recent-group-head{ font-family: var(--serif); font-weight:700; font-size:1rem; color: var(--brass-deep); padding:16px 6px 8px; border-bottom:1px dashed var(--line); margin-bottom:10px; }
+  .recent-group-head .g-count{ font-family: var(--sans); font-size:0.75rem; font-weight:600; color: var(--ink-soft); }
   .card-added-date{ font-family: var(--sans); font-size: 0.68rem; color: var(--teal); font-weight:600; margin-bottom: 8px; }
   .about-updated{ text-align:center; font-family: var(--sans); font-size: 0.8rem; color: var(--brass-deep); margin: 2px 0 6px; }
 
@@ -1375,7 +1380,7 @@
       return ia - ib;
     });
     var html = '<div class="authors-search"><input type="search" id="authorSearchInput" placeholder="ابحث باسم المؤلف…" aria-label="ابحث باسم المؤلف" autocomplete="off"></div>';
-    html += '<div class="author-row'+(state.author==='all'?' active':'')+'" data-author="all"><span class="author-name">كل المؤلفين</span><span class="c">'+TOTAL.toLocaleString('ar')+'</span></div>';
+    html += '<div class="author-row'+(state.author==='all'?' active':'')+'" data-author="all"><span class="author-name">جميع المواد</span><span class="c">'+TOTAL.toLocaleString('ar')+'</span></div>';
     letters.forEach(function(letter){
       var groupNames = groups[letter].slice().sort(function(a, b){
         var ka = authorGroupKey(a), kb = authorGroupKey(b);
@@ -1768,29 +1773,57 @@
   });
 
   // ================= أُضيف حديثًا =================
-  // عرض مستقل (بنمط الخط الزمني/الإحصائيات) يضم فقط المواد التي تحمل حقل
-  // added — تاريخ إضافتها إلى الأرشيف، وهو غير تاريخ نشرها الأصلي (date) —
-  // مرتبة بتاريخ الإضافة تنازليًا ثم بالأحدث نشرًا، وبترقيم ٣٠ مادة كل مرة
+  // عرض مستقل (بنمط الخط الزمني/الإحصائيات) للمواد التي تحمل حقل added —
+  // تاريخ إضافتها إلى الأرشيف، وهو غير تاريخ نشرها الأصلي (date) — وله وضعان:
+  // «آخر دفعة» (الافتراضي): فقط المواد التي يساوي added تاريخَ آخر تحديث،
+  // فيتطابق عدد العنوان دائمًا مع عدد المواد المعروضة فعلًا مهما تراكمت الدفعات.
+  // «كل الإضافات»: كل المواد التي تحمل added، مجمّعة تحت عناوين بتاريخ الإضافة.
+  // الترتيب داخل أي مجموعة: بتاريخ الإضافة تنازليًا ثم بالأحدث نشرًا،
+  // وبترقيم ٣٠ مادة كل مرة في الوضعين
   var recentPanel = document.getElementById('recentPanel');
   var recentBtn = document.getElementById('recentBtn');
   var recentList = [];
   var recentShown = 0;
   var RECENT_PAGE_SIZE = 30;
-  function getRecentList(){
-    return ALL.filter(function(p){ return !!p.added; }).sort(function(a, b){
+  var recentMode = 'latest';
+  var recentGroupCounts = {};
+  var recentLastGroup = null;
+  // تاريخ أحدث دفعة: من meta.json، وبغيابه يُشتق من أكبر added في البيانات
+  function latestAddedDate(){
+    if(ARCHIVE_LAST_UPDATE) return ARCHIVE_LAST_UPDATE;
+    var max = null;
+    ALL.forEach(function(p){ if(p.added && (!max || p.added > max)) max = p.added; });
+    return max;
+  }
+  function getRecentList(mode){
+    var sorted = ALL.filter(function(p){ return !!p.added; }).sort(function(a, b){
       if(a.added !== b.added) return a.added < b.added ? 1 : -1;
       return (b.ts || 0) - (a.ts || 0);
     });
+    if(mode === 'all') return sorted;
+    var latest = latestAddedDate();
+    return sorted.filter(function(p){ return p.added === latest; });
   }
   function buildRecentPanel(){
-    recentList = getRecentList();
+    recentList = getRecentList(recentMode);
     recentShown = 0;
-    var newCount = ARCHIVE_LAST_UPDATE_COUNT || recentList.length;
+    recentLastGroup = null;
+    recentGroupCounts = {};
+    recentList.forEach(function(p){ recentGroupCounts[p.added] = (recentGroupCounts[p.added] || 0) + 1; });
+    var latest = latestAddedDate();
+    // العدد المعروض هو دائمًا طول القائمة الفعلية في الوضع الحالي (لا رقم من meta)
+    var countLine = recentMode === 'all'
+      ? recentList.length.toLocaleString('ar') + ' مادة أُضيفت إلى الأرشيف'
+      : recentList.length.toLocaleString('ar') + ' مادة جديدة';
     var html = '<button class="timeline-back" id="recentBackBtn">← رجوع إلى الأرشيف</button>';
     html += '<div class="recent-head">' +
-      '<div class="recent-count">' + newCount.toLocaleString('ar') + ' مادة جديدة</div>' +
-      (ARCHIVE_LAST_UPDATE ? '<div class="recent-updated">آخر تحديث: ' + formatDate(ARCHIVE_LAST_UPDATE) + '</div>' : '') +
+      '<div class="recent-count">' + countLine + '</div>' +
+      (latest ? '<div class="recent-updated">آخر تحديث: ' + formatDate(latest) + '</div>' : '') +
       '<div class="recent-desc">اكتشف أحدث ما أُضيف إلى أرشيف كلمات أعجبتني.</div>' +
+      '<div class="recent-toggle" role="group" aria-label="وضع عرض الإضافات">' +
+        '<button type="button" data-recent-mode="latest"' + (recentMode === 'latest' ? ' class="active"' : '') + '>آخر دفعة</button>' +
+        '<button type="button" data-recent-mode="all"' + (recentMode === 'all' ? ' class="active"' : '') + '>كل الإضافات</button>' +
+      '</div>' +
       '</div>';
     html += '<div id="recentFeed"></div>';
     html += '<button class="load-more" id="recentMoreBtn" style="display:none;">عرض المزيد</button>';
@@ -1801,6 +1834,12 @@
     recentPanel.addEventListener('click', function(e){
       if(e.target.closest('#recentBackBtn')){ showFeedViewFromRecent(); return; }
       if(e.target.closest('#recentMoreBtn')){ appendRecentCards(); return; }
+      var modeBtn = e.target.closest('[data-recent-mode]');
+      if(modeBtn){
+        var m = modeBtn.getAttribute('data-recent-mode');
+        if(m !== recentMode){ recentMode = m; buildRecentPanel(); }
+        return;
+      }
       cardAreaClickHandler(e);
     });
   }
@@ -1809,7 +1848,17 @@
     var moreBtn = recentPanel.querySelector('#recentMoreBtn');
     if(!feedBox) return;
     var slice = recentList.slice(recentShown, recentShown + RECENT_PAGE_SIZE);
-    feedBox.insertAdjacentHTML('beforeend', slice.map(function(p){ return cardHtml(p, '', {recent:true}); }).join(''));
+    var html = '';
+    slice.forEach(function(p){
+      // في وضع «كل الإضافات» نفتح عنوان مجموعة جديد كلما تغيّر تاريخ الإضافة —
+      // recentLastGroup يبقى محفوظًا عبر الصفحات فلا يتكرر عنوان المجموعة الواحدة
+      if(recentMode === 'all' && p.added !== recentLastGroup){
+        recentLastGroup = p.added;
+        html += '<div class="recent-group-head">أُضيفت في ' + formatDate(p.added) + ' <span class="g-count">· ' + (recentGroupCounts[p.added] || 0).toLocaleString('ar') + ' مادة</span></div>';
+      }
+      html += cardHtml(p, '', {recent:true});
+    });
+    feedBox.insertAdjacentHTML('beforeend', html);
     recentShown += slice.length;
     if(moreBtn){
       moreBtn.textContent = 'عرض المزيد — عرض ' + recentShown.toLocaleString('ar') + ' من ' + recentList.length.toLocaleString('ar');
@@ -1817,6 +1866,7 @@
     }
   }
   function showRecentView(){
+    recentMode = 'latest'; // الوضع الافتراضي عند كل فتح: آخر دفعة فقط
     buildRecentPanel();
     recentPanel.style.display = 'block';
     timelineView.style.display = 'none';

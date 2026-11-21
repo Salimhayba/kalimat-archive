@@ -38,11 +38,20 @@ const byYear = {};
 const yearCounts = {};
 const typeCounts = {};
 const categoryCounts = {};
+// حقول «أُضيف حديثًا»: lastUpdate = أكبر قيمة added بين كل المواد،
+// وlastUpdateCount = عدد المواد التي تساوي إضافتها هذا التاريخ —
+// دالة صرفة في البيانات نفسها (نفس ما يكتبه سكربت التحديث build_update.py)
+let lastUpdate = null;
+let lastUpdateCount = 0;
 
 data.forEach(function(p){
   const year = p.date ? p.date.slice(0,4) : 'unknown';
   (byYear[year] = byYear[year] || []).push(p);
   yearCounts[year] = (yearCounts[year] || 0) + 1;
+  if(p.added){
+    if(!lastUpdate || p.added > lastUpdate){ lastUpdate = p.added; lastUpdateCount = 1; }
+    else if(p.added === lastUpdate){ lastUpdateCount++; }
+  }
   // نستخدم القيمة الفعّالة (المصحَّحة إن وُجدت) بدل الأصلية دايمًا — نفس مبدأ الواجهة effectiveType/effectiveCategory
   const effType = p.type_revised || p.type;
   const effCategory = p.category_revised || p.category;
@@ -71,6 +80,11 @@ const meta = {
   typeCounts: typeCounts,
   categoryCounts: orderedCategoryCounts,
 };
+// نضيف حقلي آخر تحديث فقط لو وُجدت مواد تحمل added أصلًا
+if(lastUpdate){
+  meta.lastUpdate = lastUpdate;
+  meta.lastUpdateCount = lastUpdateCount;
+}
 fs.writeFileSync(path.join(outDir, 'meta.json'), JSON.stringify(meta), 'utf8');
 console.log('كتبت', path.join(outDir, 'meta.json'));
 console.log('إجمالي المواد:', data.length);

@@ -502,6 +502,68 @@
   footer.app-footer .footer-fb a{ color: var(--ink-soft); text-decoration:none; border-bottom:1px solid var(--line); }
   footer.app-footer .footer-fb a:active{ color: var(--brass); }
 
+  /* ---------- أُضيف حديثًا ---------- */
+  .recent-panel{ padding: 10px 4px 24px; }
+  #recentBtn.active{ background: var(--brass); color: var(--parchment); }
+  #recentBtn.active svg{ color: var(--parchment); }
+  .recent-head{ text-align:center; padding: 10px 10px 16px; }
+  .recent-count{ font-family: var(--serif); font-size: 1.7rem; font-weight:700; color: var(--brass-deep); }
+  .recent-updated{ font-family: var(--sans); font-size: 0.78rem; color: var(--ink-soft); margin-top: 4px; }
+  .recent-desc{ font-family: var(--sans); font-size: 0.8rem; color: var(--ink-soft); margin-top: 8px; }
+  .card-added-date{ font-family: var(--sans); font-size: 0.68rem; color: var(--teal); font-weight:600; margin-bottom: 8px; }
+  .about-updated{ text-align:center; font-family: var(--sans); font-size: 0.8rem; color: var(--brass-deep); margin: 2px 0 6px; }
+
+  /* ---------- فهرس المؤلفين الأبجدي (داخل شريط المؤلفين نفسه) ---------- */
+  .author-rail{ flex-direction:column; align-items:stretch; overflow-x:hidden; overflow-y:auto; max-height: 52vh; gap:2px; }
+  .authors-search{ padding: 2px 2px 8px; }
+  .authors-search input{
+    width:100%; font-family: var(--sans); font-size: 0.85rem; color: var(--ink);
+    border: 1px solid var(--brass); border-radius: 10px; padding: 9px 12px;
+    background: rgba(255,252,244,0.5); outline:none; box-sizing: border-box;
+  }
+  body.dark .authors-search input{ background: rgba(255,255,255,0.05); }
+  .author-letter{
+    font-family: var(--serif); font-weight:700; font-size: 0.95rem; color: var(--brass-deep);
+    padding: 10px 10px 4px; border-bottom: 1px dashed var(--line); margin-bottom: 4px;
+  }
+  .author-row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding: 8px 12px; border-radius: 8px; cursor:pointer;
+    font-family: var(--sans); font-size: 0.85rem; color: var(--ink);
+  }
+  .author-row:active{ background: rgba(163,121,63,0.12); }
+  .author-row.active{ background: var(--brass); color: var(--parchment); }
+  .author-row .c{ font-size: 0.72rem; color: var(--ink-soft); flex-shrink:0; }
+  .author-row.active .c{ color: var(--parchment); }
+
+  /* ---------- عارض الصور المكبّر (Lightbox) ---------- */
+  .card-media img, .modal-media img{ cursor: zoom-in; }
+  .lightbox{
+    position: fixed; inset:0; z-index: 80; background: rgba(12,8,4,0.92);
+    display:none; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .lightbox.show{ display:flex; }
+  .lightbox-stage{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; overflow:hidden; touch-action:none; }
+  .lightbox-stage img{
+    max-width: 96vw; max-height: 92vh; object-fit: contain; user-select:none; -webkit-user-select:none;
+    touch-action:none; cursor: zoom-in;
+  }
+  .lightbox-close{
+    position:absolute; top:14px; inset-inline-start:14px; z-index:3;
+    width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,255,255,0.35);
+    background: rgba(0,0,0,0.45); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .lightbox-close svg{ width:16px; height:16px; }
+  .lightbox-tools{
+    position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:3;
+    display:flex; gap:8px;
+  }
+  .lightbox-tools button{
+    min-width:42px; height:38px; padding: 0 12px; border-radius: 999px; cursor:pointer;
+    border:1px solid rgba(255,255,255,0.35); background: rgba(0,0,0,0.45); color:#fff;
+    font-family: var(--sans); font-size: 0.9rem;
+  }
+
   .toast{
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
     background: var(--ink); color: var(--parchment); font-family: var(--sans); font-size: 0.8rem;
@@ -522,7 +584,7 @@
     @page{ margin: 1.8cm 1.5cm; }
     body{ background:#fff !important; color:#111 !important; }
     body::before, .page-watermark, .controls, .theme-toggle,
-    .load-more, .overlay, .toast, .footer-actions, .media-flag,
+    .load-more, .overlay, .lightbox, .toast, .footer-actions, .media-flag,
     .read-more-btn, .header .subtitle{ display:none !important; }
     .app{ max-width:100%; padding-bottom:0; }
     header.colophon{ padding: 0 0 14px; border-bottom: 1px solid #ccc; margin-bottom: 18px; }
@@ -600,6 +662,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><rect x="3" y="17" width="18" height="4" rx="1"/></svg>
             استيراد مفضّلتي وتقييماتي
           </button>
+          <button class="more-menu-item" id="recentBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            أُضيف حديثًا
+          </button>
           <button class="more-menu-item authors-toggle-btn" id="authorsToggleBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
             تصفية بالمؤلف
@@ -647,6 +713,7 @@
   <div class="review-panel" id="reviewPanel" style="display:none;"></div>
   <div class="stats-panel" id="statsPanel" style="display:none;"></div>
   <div class="stats-panel" id="aboutPanel" style="display:none;"></div>
+  <div class="recent-panel" id="recentPanel" style="display:none;"></div>
   <div class="wotd-section" id="wotdSection" style="display:none;"></div>
   <div class="home-categories" id="homeCategories" style="display:none;"></div>
   <div class="on-this-day" id="onThisDayBanner" style="display:none;"></div>
@@ -688,6 +755,18 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
 </button>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-label="عارض الصور">
+  <div class="lightbox-stage" id="lightboxStage"><img id="lightboxImg" alt=""></div>
+  <button class="lightbox-close" id="lightboxClose" aria-label="إغلاق">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <div class="lightbox-tools">
+    <button id="lightboxZoomOut" aria-label="تصغير">−</button>
+    <button id="lightboxZoomReset" aria-label="الحجم الأصلي">إعادة ضبط</button>
+    <button id="lightboxZoomIn" aria-label="تكبير">+</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <div class="loading-screen" id="loadingScreen">
@@ -723,6 +802,8 @@
     window.ARCHIVE_TYPE_COUNTS = meta.typeCounts;
     window.ARCHIVE_CATEGORY_COUNTS = meta.categoryCounts;
     window.ARCHIVE_TOTAL = meta.total;
+    window.ARCHIVE_LAST_UPDATE = meta.lastUpdate || null;
+    window.ARCHIVE_LAST_UPDATE_COUNT = meta.lastUpdateCount || 0;
   }
   var loadingScreen = document.getElementById('loadingScreen');
   try{
@@ -733,6 +814,9 @@
     return;
   }
   var BASE_DATA = window.ARCHIVE_DATA || [];
+  // تاريخ آخر تحديث للأرشيف وعدد مواد دفعته — من meta.json فقط (بلا أي تاريخ مثبّت في الكود)
+  var ARCHIVE_LAST_UPDATE = window.ARCHIVE_LAST_UPDATE || null;
+  var ARCHIVE_LAST_UPDATE_COUNT = window.ARCHIVE_LAST_UPDATE_COUNT || 0;
   var STORAGE_KEY = 'kalimat_archive_extra_posts_v1';
   var FAV_KEY = 'kalimat_archive_favorites_v1';
   var THEME_KEY = 'kalimat_archive_theme_v1';
@@ -1002,7 +1086,10 @@
   // ى/ي، ة/ه، تشكيل) تحت اسم عرض واحد — في الذاكرة فقط، دون تعديل ملفات
   // البيانات. اسم العرض هو الصورة الأكثر ورودًا (وعند التعادل: الخالية من التطويل)
   function authorGroupKey(name){
-    return (name || '').replace(/[ـً-ٰٟ]/g, '').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
+    // توحيد صور الهمزة أيضًا (أ/إ/آ ← ا) كما في تسوية البحث normalizeChar —
+    // على البيانات الحالية لا يغيّر أي تجميع أو عدّ (٩٢ مؤلفًا قبل وبعد)،
+    // لكنه يمنع انقسام مؤلف مستقبلي ورد اسمه بصورتين للهمزة
+    return (name || '').replace(/[ـً-ٰٟ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
   }
   function canonicalizeAuthors(){
     var variants = {};
@@ -1049,7 +1136,8 @@
 
   function updateFooter(){
     var lineEl = document.querySelector('.app-footer .footer-line');
-    if(lineEl) lineEl.textContent = 'أرشيف أوفلاين · ' + TOTAL.toLocaleString('ar') + ' نص · © سالم عبدالواحد';
+    if(lineEl) lineEl.textContent = 'أرشيف أوفلاين · ' + TOTAL.toLocaleString('ar') + ' نص · © سالم عبدالواحد' +
+      (ARCHIVE_LAST_UPDATE ? ' · آخر تحديث: ' + formatDate(ARCHIVE_LAST_UPDATE) : '');
   }
   updateFooter();
 
@@ -1215,31 +1303,84 @@
     });
   }
 
+  // فهرس المؤلفين الأبجدي: تجميع الأسماء الموحّدة (AUTHOR_COUNTS بعد
+  // canonicalizeAuthors) تحت عناوين حروف هجائية، داخل شريط المؤلفين نفسه —
+  // مع بحث فوري باسم المؤلف بنفس تسوية البحث الرئيسي (بلا تشكيل/تطويل)
+  var ARABIC_LETTER_ORDER = ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+  function authorGroupLetter(name){
+    var clean = (name || '').replace(/[ـً-ٰٟ]/g, '').trim();
+    for(var i=0;i<clean.length;i++){
+      var ch = clean[i];
+      if(/[ء-ي]/.test(ch)){
+        if('أإآ'.indexOf(ch) !== -1) return 'ا';
+        if(ch === 'ة') return 'ه';
+        if(ch === 'ى' || ch === 'ئ') return 'ي';
+        if(ch === 'ؤ') return 'و';
+        return ch;
+      }
+    }
+    return '#';
+  }
   function buildAuthorRail(){
-    var names = Object.keys(AUTHOR_COUNTS).sort(function(a,b){ return AUTHOR_COUNTS[b]-AUTHOR_COUNTS[a]; });
+    var names = Object.keys(AUTHOR_COUNTS);
     if(!names.length){ authorsToggleBtn.style.display = 'none'; return; }
-    var html = '<div class="author-chip'+(state.author==='all'?' active':'')+'" data-author="all">كل المؤلفين</div>';
+    var groups = {};
     names.forEach(function(n){
-      html += '<div class="author-chip'+(state.author===n?' active':'')+'" data-author="'+escapeHtml(n)+'">'+escapeHtml(n)+' · '+AUTHOR_COUNTS[n].toLocaleString('ar')+'</div>';
+      var letter = authorGroupLetter(n);
+      (groups[letter] = groups[letter] || []).push(n);
+    });
+    var letters = Object.keys(groups).sort(function(a, b){
+      var ia = ARABIC_LETTER_ORDER.indexOf(a), ib = ARABIC_LETTER_ORDER.indexOf(b);
+      if(ia === -1) ia = 999;
+      if(ib === -1) ib = 999;
+      return ia - ib;
+    });
+    var html = '<div class="authors-search"><input type="search" id="authorSearchInput" placeholder="ابحث باسم المؤلف…" aria-label="ابحث باسم المؤلف" autocomplete="off"></div>';
+    html += '<div class="author-row'+(state.author==='all'?' active':'')+'" data-author="all"><span class="author-name">كل المؤلفين</span><span class="c">'+TOTAL.toLocaleString('ar')+'</span></div>';
+    letters.forEach(function(letter){
+      var groupNames = groups[letter].slice().sort(function(a, b){
+        var ka = authorGroupKey(a), kb = authorGroupKey(b);
+        return ka < kb ? -1 : (ka > kb ? 1 : 0);
+      });
+      html += '<div class="author-group" data-letter="'+escapeHtml(letter)+'"><div class="author-letter">'+escapeHtml(letter)+'</div>';
+      groupNames.forEach(function(n){
+        html += '<div class="author-row'+(state.author===n?' active':'')+'" data-author="'+escapeHtml(n)+'" data-norm="'+escapeHtml(normalizeQuery(n))+'"><span class="author-name">'+escapeHtml(n)+'</span><span class="c">'+AUTHOR_COUNTS[n].toLocaleString('ar')+'</span></div>';
+      });
+      html += '</div>';
     });
     authorRail.innerHTML = html;
     if(state.author !== 'all'){
       authorRail.style.display = 'flex'; authorsToggleBtn.classList.add('active');
       setTimeout(function(){
-        var activeChip = authorRail.querySelector('.author-chip.active');
-        if(activeChip && activeChip.scrollIntoView) activeChip.scrollIntoView({inline:'center', block:'nearest'});
+        var activeRow = authorRail.querySelector('.author-row.active');
+        if(activeRow && activeRow.scrollIntoView) activeRow.scrollIntoView({block:'center'});
       }, 0);
     }
     if(authorRail.dataset.bound) return;
     authorRail.dataset.bound = '1';
     authorRail.addEventListener('click', function(e){
-      var chip = e.target.closest('.author-chip');
-      if(!chip) return;
-      state.author = chip.getAttribute('data-author');
+      var row = e.target.closest('[data-author]');
+      if(!row) return;
+      state.author = row.getAttribute('data-author');
       state.page = 0;
-      authorRail.querySelectorAll('.author-chip').forEach(function(c){ c.classList.remove('active'); });
-      chip.classList.add('active');
+      authorRail.querySelectorAll('.author-row').forEach(function(c){ c.classList.remove('active'); });
+      row.classList.add('active');
       render(true);
+    });
+    // بحث المؤلفين: يُرشّح الصفوف بالمفتاح المُسوّى (data-norm) ويخفي عناوين
+    // الحروف التي لم يتبقَّ تحتها أي مؤلف ظاهر
+    authorRail.addEventListener('input', function(e){
+      if(e.target.id !== 'authorSearchInput') return;
+      var nq = normalizeQuery(e.target.value.trim());
+      authorRail.querySelectorAll('.author-group').forEach(function(g){
+        var anyVisible = false;
+        g.querySelectorAll('.author-row').forEach(function(r){
+          var show = !nq || (r.getAttribute('data-norm') || '').indexOf(nq) !== -1;
+          r.style.display = show ? '' : 'none';
+          if(show) anyVisible = true;
+        });
+        g.style.display = anyVisible ? '' : 'none';
+      });
     });
     authorsToggleBtn.addEventListener('click', function(){
       var open = authorRail.style.display !== 'none';
@@ -1319,6 +1460,8 @@
     timelineView.style.display = 'flex';
     reviewPanel.style.display = 'none';
     statsPanel.style.display = 'none';
+    recentPanel.style.display = 'none';
+    recentBtn.classList.remove('active');
     reviewBtn.classList.remove('active');
     statsBtn.classList.remove('active');
     feedEl.style.display = 'none';
@@ -1332,10 +1475,12 @@
     timelineView.style.display = 'none';
     reviewPanel.style.display = 'none';
     statsPanel.style.display = 'none';
+    recentPanel.style.display = 'none';
     feedEl.style.display = '';
     timelineBtn.classList.remove('active');
     reviewBtn.classList.remove('active');
     statsBtn.classList.remove('active');
+    recentBtn.classList.remove('active');
     buildOnThisDayBanner();
     render(true);
   }
@@ -1404,6 +1549,8 @@
     reviewPanel.style.display = 'block';
     timelineView.style.display = 'none';
     statsPanel.style.display = 'none';
+    recentPanel.style.display = 'none';
+    recentBtn.classList.remove('active');
     statsBtn.classList.remove('active');
     feedEl.style.display = 'none';
     loadMoreBtn.style.display = 'none';
@@ -1498,6 +1645,8 @@
     statsPanel.style.display = 'block';
     timelineView.style.display = 'none';
     reviewPanel.style.display = 'none';
+    recentPanel.style.display = 'none';
+    recentBtn.classList.remove('active');
     reviewBtn.classList.remove('active');
     timelineBtn.classList.remove('active');
     feedEl.style.display = 'none';
@@ -1535,6 +1684,7 @@
       '<p>وبنيته ببساطة، كصفحة واحدة خفيفة، بلا أطر عمل خارجية، لتظل الكلمات قريبة منك حتى بلا إنترنت بعد زيارتك الأولى، ويمكنك إضافته كاختصار على هاتفك أو حاسوبك؛ لأن ما يستحق أن يُحفظ، يستحق أن يبقى في متناولك.</p>' +
       '<p>ولعلّك تجد بين هذه الكلمات ما أعجبك أنت أيضًا.</p>' +
       '</div>' +
+      (ARCHIVE_LAST_UPDATE ? '<div class="about-updated">آخر تحديث: ' + formatDate(ARCHIVE_LAST_UPDATE) + (ARCHIVE_LAST_UPDATE_COUNT ? ' · أُضيفت فيه ' + ARCHIVE_LAST_UPDATE_COUNT.toLocaleString('ar') + ' مادة جديدة' : '') + '</div>' : '') +
       '<div class="about-btn-row"><button class="timeline-back" id="aboutStartBtn">ابدأ التصفح ←</button></div>';
     aboutPanel.innerHTML = html;
     if(!aboutPanel.dataset.bound){
@@ -1550,6 +1700,8 @@
     timelineView.style.display = 'none';
     reviewPanel.style.display = 'none';
     statsPanel.style.display = 'none';
+    recentPanel.style.display = 'none';
+    recentBtn.classList.remove('active');
     reviewBtn.classList.remove('active');
     timelineBtn.classList.remove('active');
     statsBtn.classList.remove('active');
@@ -1570,6 +1722,193 @@
     if(aboutPanel.style.display === 'none' || !aboutPanel.style.display) showAboutView();
     else showFeedViewFromAbout();
   });
+
+  // ================= أُضيف حديثًا =================
+  // عرض مستقل (بنمط الخط الزمني/الإحصائيات) يضم فقط المواد التي تحمل حقل
+  // added — تاريخ إضافتها إلى الأرشيف، وهو غير تاريخ نشرها الأصلي (date) —
+  // مرتبة بتاريخ الإضافة تنازليًا ثم بالأحدث نشرًا، وبترقيم ٣٠ مادة كل مرة
+  var recentPanel = document.getElementById('recentPanel');
+  var recentBtn = document.getElementById('recentBtn');
+  var recentList = [];
+  var recentShown = 0;
+  var RECENT_PAGE_SIZE = 30;
+  function getRecentList(){
+    return ALL.filter(function(p){ return !!p.added; }).sort(function(a, b){
+      if(a.added !== b.added) return a.added < b.added ? 1 : -1;
+      return (b.ts || 0) - (a.ts || 0);
+    });
+  }
+  function buildRecentPanel(){
+    recentList = getRecentList();
+    recentShown = 0;
+    var newCount = ARCHIVE_LAST_UPDATE_COUNT || recentList.length;
+    var html = '<button class="timeline-back" id="recentBackBtn">← رجوع إلى الأرشيف</button>';
+    html += '<div class="recent-head">' +
+      '<div class="recent-count">' + newCount.toLocaleString('ar') + ' مادة جديدة</div>' +
+      (ARCHIVE_LAST_UPDATE ? '<div class="recent-updated">آخر تحديث: ' + formatDate(ARCHIVE_LAST_UPDATE) + '</div>' : '') +
+      '<div class="recent-desc">اكتشف أحدث ما أُضيف إلى أرشيف كلمات أعجبتني.</div>' +
+      '</div>';
+    html += '<div id="recentFeed"></div>';
+    html += '<button class="load-more" id="recentMoreBtn" style="display:none;">عرض المزيد</button>';
+    recentPanel.innerHTML = html;
+    appendRecentCards();
+    if(recentPanel.dataset.bound) return;
+    recentPanel.dataset.bound = '1';
+    recentPanel.addEventListener('click', function(e){
+      if(e.target.closest('#recentBackBtn')){ showFeedViewFromRecent(); return; }
+      if(e.target.closest('#recentMoreBtn')){ appendRecentCards(); return; }
+      cardAreaClickHandler(e);
+    });
+  }
+  function appendRecentCards(){
+    var feedBox = recentPanel.querySelector('#recentFeed');
+    var moreBtn = recentPanel.querySelector('#recentMoreBtn');
+    if(!feedBox) return;
+    var slice = recentList.slice(recentShown, recentShown + RECENT_PAGE_SIZE);
+    feedBox.insertAdjacentHTML('beforeend', slice.map(function(p){ return cardHtml(p, '', {recent:true}); }).join(''));
+    recentShown += slice.length;
+    if(moreBtn){
+      moreBtn.textContent = 'عرض المزيد — عرض ' + recentShown.toLocaleString('ar') + ' من ' + recentList.length.toLocaleString('ar');
+      moreBtn.style.display = recentShown < recentList.length ? 'block' : 'none';
+    }
+  }
+  function showRecentView(){
+    buildRecentPanel();
+    recentPanel.style.display = 'block';
+    timelineView.style.display = 'none';
+    reviewPanel.style.display = 'none';
+    statsPanel.style.display = 'none';
+    aboutPanel.style.display = 'none';
+    feedEl.style.display = 'none';
+    loadMoreBtn.style.display = 'none';
+    if(wotdSection) wotdSection.style.display = 'none';
+    if(homeCategories) homeCategories.style.display = 'none';
+    onThisDayBanner.style.display = 'none';
+    timelineBtn.classList.remove('active');
+    reviewBtn.classList.remove('active');
+    statsBtn.classList.remove('active');
+    aboutBtn.classList.remove('active');
+    recentBtn.classList.add('active');
+    window.scrollTo({top:0});
+  }
+  function showFeedViewFromRecent(){
+    recentPanel.style.display = 'none';
+    recentBtn.classList.remove('active');
+    state.page = 0;
+    showFeedView();
+  }
+  recentBtn.addEventListener('click', function(){
+    if(recentPanel.style.display === 'none' || !recentPanel.style.display) showRecentView();
+    else showFeedViewFromRecent();
+  });
+
+  // ================= عارض الصور المكبّر (Lightbox) =================
+  // يفتح عند الضغط على صورة أي مادة (بطاقة أو وضع قراءة): تكبير بأزرار وعجلة
+  // الفأرة وقرص الإصبعين، وسحب للتحريك أثناء التكبير — Pointer Events خام
+  // بلا مكتبات. عند الإغلاق نعيد الصفحة لموضع التمرير نفسه قبل الفتح.
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var lightboxStage = document.getElementById('lightboxStage');
+  var lbScale = 1, lbX = 0, lbY = 0, lbSavedScrollY = 0;
+  function isLightboxOpen(){ return lightbox.classList.contains('show'); }
+  function lbApply(){
+    lightboxImg.style.transform = 'translate(' + lbX + 'px, ' + lbY + 'px) scale(' + lbScale + ')';
+    lightboxImg.style.cursor = lbScale > 1 ? 'grab' : 'zoom-in';
+  }
+  function lbReset(){ lbScale = 1; lbX = 0; lbY = 0; lbApply(); }
+  function openLightbox(src){
+    if(!src) return;
+    lbSuppressClick = false; // جلسة جديدة: لا راية إخماد ضغطة موروثة من سحب/قرص سابق
+    lbSavedScrollY = window.scrollY || window.pageYOffset || 0;
+    lightboxImg.src = src;
+    lbReset();
+    lightbox.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    if(!isLightboxOpen()) return;
+    lightbox.classList.remove('show');
+    document.body.style.overflow = '';
+    lightboxImg.removeAttribute('src');
+    window.scrollTo(0, lbSavedScrollY);
+  }
+  // تكبير مع تثبيت النقطة الواقعة تحت المؤشر/الإصبع (إحداثياتها نسبة لمركز المسرح)
+  function lbZoomAt(factor, clientX, clientY){
+    var rect = lightboxStage.getBoundingClientRect();
+    var cx = clientX - (rect.left + rect.width / 2);
+    var cy = clientY - (rect.top + rect.height / 2);
+    var old = lbScale;
+    var next = Math.min(6, Math.max(1, old * factor));
+    if(next === old) return;
+    lbX = cx - (next / old) * (cx - lbX);
+    lbY = cy - (next / old) * (cy - lbY);
+    lbScale = next;
+    if(lbScale === 1){ lbX = 0; lbY = 0; }
+    lbApply();
+  }
+  function lbZoomCenter(factor){
+    var rect = lightboxStage.getBoundingClientRect();
+    lbZoomAt(factor, rect.left + rect.width / 2, rect.top + rect.height / 2);
+  }
+  document.getElementById('lightboxClose').addEventListener('click', function(e){ e.stopPropagation(); closeLightbox(); });
+  document.getElementById('lightboxZoomIn').addEventListener('click', function(){ lbZoomCenter(1.35); });
+  document.getElementById('lightboxZoomOut').addEventListener('click', function(){ lbZoomCenter(1 / 1.35); });
+  document.getElementById('lightboxZoomReset').addEventListener('click', function(){ lbReset(); });
+  var lbSuppressClick = false;
+  lightboxStage.addEventListener('click', function(e){
+    if(lbSuppressClick){ lbSuppressClick = false; return; } // كانت سحبة، لا ضغطة إغلاق
+    if(e.target === lightboxStage) closeLightbox();
+  });
+  lightboxStage.addEventListener('wheel', function(e){
+    e.preventDefault();
+    lbZoomAt(e.deltaY < 0 ? 1.12 : (1 / 1.12), e.clientX, e.clientY);
+  }, {passive:false});
+  lightboxImg.addEventListener('dblclick', function(e){
+    if(lbScale > 1) lbReset(); else lbZoomAt(2.2, e.clientX, e.clientY);
+  });
+  document.getElementById('modalMedia').addEventListener('click', function(e){
+    var img = e.target.closest('img');
+    if(img) openLightbox(img.getAttribute('src'));
+  });
+  // سحب بمؤشر واحد أثناء التكبير + قرص بمؤشرين للتكبير/التصغير
+  var lbPointers = {};
+  var lbPinchDist = 0, lbPinchScale = 1;
+  lightboxStage.addEventListener('pointerdown', function(e){
+    lbPointers[e.pointerId] = {x: e.clientX, y: e.clientY};
+    try{ lightboxStage.setPointerCapture(e.pointerId); }catch(err){}
+    if(Object.keys(lbPointers).length === 2){
+      var pts = Object.values(lbPointers);
+      lbPinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      lbPinchScale = lbScale;
+    }
+  });
+  lightboxStage.addEventListener('pointermove', function(e){
+    if(!lbPointers[e.pointerId]) return;
+    var prev = lbPointers[e.pointerId];
+    var dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+    lbPointers[e.pointerId] = {x: e.clientX, y: e.clientY};
+    var count = Object.keys(lbPointers).length;
+    if(count === 2){
+      var pts = Object.values(lbPointers);
+      var dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      var midX = (pts[0].x + pts[1].x) / 2, midY = (pts[0].y + pts[1].y) / 2;
+      if(lbPinchDist > 0 && dist > 0){
+        var target = Math.min(6, Math.max(1, lbPinchScale * (dist / lbPinchDist)));
+        if(target !== lbScale) lbZoomAt(target / lbScale, midX, midY);
+      }
+      if(Math.abs(dx) + Math.abs(dy) > 2) lbSuppressClick = true;
+    } else if(count === 1 && lbScale > 1){
+      if(dx || dy) lbSuppressClick = true;
+      lbX += dx; lbY += dy;
+      lbApply();
+    }
+  });
+  function lbPointerEnd(e){
+    delete lbPointers[e.pointerId];
+    if(Object.keys(lbPointers).length < 2) lbPinchDist = 0;
+  }
+  lightboxStage.addEventListener('pointerup', lbPointerEnd);
+  lightboxStage.addEventListener('pointercancel', lbPointerEnd);
 
   // ================= في مثل هذا اليوم =================
   var now = new Date();
@@ -1716,8 +2055,12 @@
     return '<img loading="lazy" src="'+src+'" alt="">';
   }
 
-  function cardHtml(p, q){
+  function cardHtml(p, q, opts){
     var cardMedia = p.media ? '<div class="card-media">' + mediaHtml(p.media) + '</div>' : '';
+    // في عرض «أُضيف حديثًا» نُسمّي التاريخين صراحة كي لا يختلط تاريخ النشر
+    // الأصلي (date) بتاريخ الإضافة للأرشيف (added)
+    var pubLabel = (opts && opts.recent) ? '<span class="date-label">نُشرت في </span>' : '';
+    var addedLine = (opts && opts.recent && p.added) ? '<div class="card-added-date">أُضيفت إلى الأرشيف في ' + formatDate(p.added) + '</div>' : '';
     var effType = p.type_revised || p.type;
     var effCategory = p.category_revised || p.category;
     var typeTag = effType ? '<span class="tag '+(TYPE_CLASS[effType]||'')+'">'+effType+'</span>' : '';
@@ -1733,9 +2076,10 @@
     var hijri = hijriLabel(p.date);
     return (
       '<div class="card '+motif+'" data-id="'+p.id+'" id="post-'+p.id+'">' +
-        '<div class="card-date"><span class="dot"></span>' + formatDate(p.date) +
+        '<div class="card-date"><span class="dot"></span>' + pubLabel + formatDate(p.date) +
           (hijri ? ' <span class="hijri">· '+hijri+'</span>' : '') +
           typeTag + catTag + authorTag + '</div>' +
+        addedLine +
         cardMedia +
         '<div class="card-text'+clampClass+'" data-text-id="'+p.id+'">' + highlight(p, q) + '</div>' +
         readMoreBtn +
@@ -1861,7 +2205,11 @@
   }
 
   // ================= Feed interactions (delegate) =================
-  feedEl.addEventListener('click', function(e){
+  // معالج واحد مشترك بين خلاصة الأرشيف وعرض «أُضيف حديثًا» (نفس البطاقات
+  // والأزرار) — قائمة القراءة تختلف حسب الحاوية التي وقع فيها الضغط
+  function cardAreaClickHandler(e){
+    var mediaImg = e.target.closest('.card-media img');
+    if(mediaImg){ openLightbox(mediaImg.getAttribute('src')); return; }
     var copyBtn = e.target.closest('[data-copy]');
     var favBtn = e.target.closest('[data-fav]');
     var shareBtn = e.target.closest('[data-share]');
@@ -1870,7 +2218,8 @@
 
     if(readBtn){
       var idR = parseInt(readBtn.getAttribute('data-read'), 10);
-      openReadingMode(idR, currentFiltered.length ? currentFiltered : SORTED);
+      var readList = (e.currentTarget === recentPanel) ? recentList : (currentFiltered.length ? currentFiltered : SORTED);
+      openReadingMode(idR, readList);
       return;
     }    if(copyBtn){
       var id1 = parseInt(copyBtn.getAttribute('data-copy'), 10);
@@ -1908,7 +2257,7 @@
     }
     if(moreBtn){
       var id4 = moreBtn.getAttribute('data-more');
-      var textEl = feedEl.querySelector('[data-text-id="'+id4+'"]');
+      var textEl = e.currentTarget.querySelector('[data-text-id="'+id4+'"]');
       textEl.classList.toggle('clamped');
       if(!textEl.classList.contains('clamped')){
         moreBtn.textContent = 'عرض أقل';
@@ -1917,7 +2266,8 @@
       }
       return;
     }
-  });
+  }
+  feedEl.addEventListener('click', cardAreaClickHandler);
 
   function fallbackCopy(text, cb){
     var ta = document.createElement('textarea');
@@ -2126,6 +2476,11 @@
   document.getElementById('modalClose').addEventListener('click', function(){ overlay.classList.remove('show'); });
   overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('show'); });
   document.addEventListener('keydown', function(e){
+    // عارض الصور له الأولوية: Esc يغلقه وحده دون إغلاق وضع القراءة خلفه
+    if(isLightboxOpen()){
+      if(e.key === 'Escape') closeLightbox();
+      return;
+    }
     if(!overlay.classList.contains('show')) return;
     if(e.key === 'Escape') overlay.classList.remove('show');
     else if(e.key === 'ArrowLeft') showReadingItem(readingIndex + 1); // RTL: يسار = التالي
@@ -2385,14 +2740,17 @@
   // لما المستخدم يدوس "رجوع" بعد ما فلتر، لازم الفلاتر ترجع لحالتها السابقة مش تفضل عالقة على آخر حالة
   window.addEventListener('popstate', function(){
     overlay.classList.remove('show'); // إغلاق وضع القراءة لو كان مفتوحًا وقت الرجوع
+    closeLightbox();
     timelineView.style.display = 'none';
     reviewPanel.style.display = 'none';
     statsPanel.style.display = 'none';
     aboutPanel.style.display = 'none';
+    recentPanel.style.display = 'none';
     timelineBtn.classList.remove('active');
     reviewBtn.classList.remove('active');
     statsBtn.classList.remove('active');
     aboutBtn.classList.remove('active');
+    recentBtn.classList.remove('active');
     feedEl.style.display = '';
 
     state.query = ''; state.year = 'all'; state.type = 'all'; state.category = 'all'; state.author = 'all';

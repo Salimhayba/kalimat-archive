@@ -2185,6 +2185,7 @@
             '<button class="'+favClass+'" data-fav="'+p.id+'" aria-label="إضافة للمفضلة"><svg viewBox="0 0 24 24" fill="'+favIconFill+'" stroke="currentColor" stroke-width="1.6"><path d="M12 17.3l-5.5 3 1.4-6-4.7-4 6.2-.5L12 4l2.6 5.8 6.2.5-4.7 4 1.4 6z"/></svg></button>' +
             '<button class="btn-mini" data-share="'+p.id+'" aria-label="مشاركة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg></button>' +
             '<button class="btn-mini" data-copy="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>نسخ</button>' +
+            '<button class="btn-mini" data-card="'+p.id+'" aria-label="تحميل ككارت"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v7m0 0l-3-3m3 3l3-3"/></svg>كارت</button>' +
           '</div>' +
         '</div>' +
         '<div class="card-watermark">' + COPYRIGHT_TEXT + '</div>' +
@@ -2299,6 +2300,115 @@
     } else { doCopy(); }
   }
 
+  // ================= Card image download =================
+  // يرسم المادة على قالب «كلمات أعجبتني» الكريمي/الذهبي (هوية الموقع)
+  // ويحمّلها PNG — كل شيء يتم محليًا في المتصفح، بلا أي خادم إضافي
+  function wrapCardLines(ctx, text, maxWidth){
+    var words = text.split(/\s+/), lines = [], cur = '';
+    words.forEach(function(w){
+      var t = cur ? cur + ' ' + w : w;
+      if(ctx.measureText(t).width > maxWidth && cur){ lines.push(cur); cur = w; }
+      else cur = t;
+    });
+    if(cur) lines.push(cur);
+    return lines;
+  }
+
+  function downloadCard(p){
+    var W = 1080, H = 1080;
+    var canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    var ctx = canvas.getContext('2d');
+    var SERIF = "'Traditional Arabic','Noto Naskh Arabic','Geeza Pro',serif";
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#f8f1de'); g.addColorStop(1, '#efe6d3');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = '#a3793f'; ctx.lineWidth = 5; ctx.strokeRect(36, 36, W-72, H-72);
+    ctx.lineWidth = 1.5; ctx.strokeRect(56, 56, W-112, H-112);
+    ctx.textAlign = 'center';
+    try{ ctx.direction = 'rtl'; }catch(e){}
+    var cx = W/2;
+    ctx.fillStyle = '#8a6230';
+    ctx.font = '700 64px ' + SERIF;
+    ctx.fillText('كلمات أعجبتني', cx, 168);
+    ctx.font = '34px ' + SERIF; ctx.fillStyle = '#a3793f';
+    ctx.fillText('أرشيف · رقم ' + p.id, cx, 224);
+    ctx.font = '30px ' + SERIF;
+    ctx.fillText('❖ ❖ ❖', cx, 284);
+    ctx.font = '30px ' + SERIF; ctx.fillStyle = '#8a6230';
+    ctx.fillText('Salim Abdulwahed', cx, H-118);
+    ctx.font = '26px ' + SERIF; ctx.fillStyle = '#a3793f';
+    ctx.fillText('salimhayba.github.io/kalimat-archive', cx, H-76);
+
+    function finish(){
+      function save(href){
+        var a = document.createElement('a');
+        a.href = href;
+        a.download = 'kalimat-' + p.id + '.png';
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ a.remove(); }, 400);
+        showToast('تم تحميل الكارت');
+      }
+      if(canvas.toBlob){
+        canvas.toBlob(function(blob){
+          var url = URL.createObjectURL(blob);
+          save(url);
+          setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+        }, 'image/png');
+      } else { save(canvas.toDataURL('image/png')); }
+    }
+
+    function drawText(){
+      var rawText = (p.text || '').replace(/[ \t]+\n/g, '\n').trim();
+      ctx.fillStyle = '#c9a05f'; ctx.font = '700 110px ' + SERIF;
+      ctx.fillText('”', cx, 428);
+      var maxW = W - 300, top = 500, bottom = p.author ? 820 : 860;
+      var size = 52, lines = [];
+      while(size > 26){
+        ctx.font = size + 'px ' + SERIF;
+        lines = [];
+        rawText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(ctx, seg, maxW)); });
+        if(lines.length * (size*1.7) <= (bottom - top)) break;
+        size -= 4;
+      }
+      var lh = size * 1.7;
+      if(lines.length * lh > (bottom - top) && lines.length){
+        var maxLines = Math.max(1, Math.floor((bottom - top) / lh));
+        lines = lines.slice(0, maxLines);
+        lines[lines.length-1] = lines[lines.length-1].replace(/.$/, '…');
+      }
+      ctx.fillStyle = '#2a1e14'; ctx.font = size + 'px ' + SERIF;
+      var y = top + size;
+      lines.forEach(function(ln){ ctx.fillText(ln, cx, y); y += lh; });
+      if(p.author){
+        ctx.fillStyle = '#8a6230'; ctx.font = '40px ' + SERIF;
+        ctx.fillText('— ' + p.author, cx, 906);
+      }
+      finish();
+    }
+
+    var rawText0 = (p.text || '').trim();
+    var ext0 = p.media ? (p.media.split('.').pop() || '').toLowerCase() : '';
+    var isPhotoCard = !!p.media && rawText0.length < 20 && VIDEO_EXTS.indexOf(ext0) === -1;
+    if(isPhotoCard){
+      var img = new Image();
+      img.onload = function(){
+        var bx = 150, by = 330, bw = W-300, bh = 480;
+        var scale = Math.max(bw/img.width, bh/img.height);
+        var dw = img.width*scale, dh = img.height*scale;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip();
+        ctx.drawImage(img, bx + (bw-dw)/2, by + (bh-dh)/2, dw, dh);
+        ctx.restore();
+        ctx.strokeStyle = '#a3793f'; ctx.lineWidth = 3; ctx.strokeRect(bx, by, bw, bh);
+        if(p.author){ ctx.fillStyle = '#2a1e14'; ctx.font = '38px ' + SERIF; ctx.fillText('— ' + p.author, cx, by+bh+74); }
+        finish();
+      };
+      img.onerror = function(){ drawText(); };
+      img.src = 'media/' + p.media;
+    } else { drawText(); }
+  }
+
   // ================= Feed interactions (delegate) =================
   // معالج واحد مشترك بين خلاصة الأرشيف وعرض «أُضيف حديثًا» (نفس البطاقات
   // والأزرار) — قائمة القراءة تختلف حسب الحاوية التي وقع فيها الضغط
@@ -2306,6 +2416,7 @@
     var mediaImg = e.target.closest('.card-media img');
     if(mediaImg){ openLightbox(mediaImg.getAttribute('src')); return; }
     var copyBtn = e.target.closest('[data-copy]');
+    var cardBtn = e.target.closest('[data-card]');
     var favBtn = e.target.closest('[data-fav]');
     var shareBtn = e.target.closest('[data-share]');
     var moreBtn = e.target.closest('[data-more]');
@@ -2330,6 +2441,13 @@
       if(navigator.clipboard && navigator.clipboard.writeText){
         navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
       } else { fallbackCopy(text, done); }
+      return;
+    }
+    if(cardBtn){
+      var idK = parseInt(cardBtn.getAttribute('data-card'), 10);
+      var postK = ALL.find(function(p){ return p.id === idK; });
+      if(!postK) return;
+      downloadCard(postK);
       return;
     }
     if(favBtn){

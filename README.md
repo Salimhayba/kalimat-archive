@@ -52,7 +52,7 @@ kalimat-archive/
 كل ما تعدّل `index.html` أو أي ملف تحت `data/`، لازم تزوّد رقم الإصدار في أول `service-worker.js`:
 
 ```js
-const CACHE_VERSION = 'kalimat-archive-v37'; // زوّد الرقم
+const CACHE_VERSION = 'kalimat-archive-v38'; // زوّد الرقم
 ```
 
 من غير كده، المستخدمين اللي فاتحين نسخة قديمة مخزّنة أوفلاين مش هيوصلهم التحديث.

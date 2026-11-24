@@ -794,7 +794,7 @@
 </div>
 
 <footer class="app-footer">
-  <div class="footer-line">أرشيف أوفلاين · %%COUNT%% نص · © سالم عبدالواحد</div>
+  <div class="footer-line">أرشيف أوفلاين · ٨٬٣٤٨ نص · © سالم عبدالواحد</div>
   <div class="footer-fb"><a href="https://www.facebook.com/share/199PV9SEnb/?mibextid=wwXIfr" target="_blank" rel="noopener">الكتابة والمتابعة على فيسبوك</a></div>
 </footer>
 
@@ -2321,6 +2321,32 @@
     var ext0 = p.media ? (p.media.split('.').pop() || '').toLowerCase() : '';
     var isPhotoCard = !!p.media && rawText.length < 20 && VIDEO_EXTS.indexOf(ext0) === -1;
 
+    // نسبة الكارت: حقل المؤلف إن وُجد، وإلا اشتقاق آمن من سطر التوقيع الأخير
+    // إن طابق اسمًا معروفًا من توقيعات الأرشيف المتكررة — وحينها يُحذف السطر
+    // من متن الكارت ويظهر في سطر النسبة بدل تكراره
+    var CARD_AUTHORS = ['أبو العتاهية','أبو فراس الحمداني','أحمد العزري','أحمد شوقي','أدهم شرقاوي','أشرف حشيش','أمل الشيخ','أيمن العتوم','أيوب الجهني','إبراهيم حمدان','إبراهيم طلحة','إسلام منصور.','إيليا أبو ماضي','ابن الجوزي','ابن القيم','ابن حزم','ابن زيدون','البحتري','الرافعي','الشيخ عبد العزيز الطريفي','الشيخ عبدالعزيز الطريفي','الشيخ علي الطنطاوي','الشيخ علي الطنطاوي رحمه الله','بدر الثوعي','بهاء الدين زهير','جاسم الصحيح','حذيفة العرجي','خالد العتيق','خالد بن محمد المقرن','د. عبد الرحمن العشماوي','د. عبدالرحمن العشماوي','د. فواز اللعبون','د. كفاح أبو هنّود','د. ماجد عبدالله','د. محمد المقرن','د.فواز اللعبون','د.كفاح أبو هنّود','د.محمد المقرن','دلال العمودي','رائد عبداللطيف','رسل راكان','سلطان السبهان','سوسن الدعيس','شادي الظاهر','شادي المرعبي','شروق القويعي','صالح الصملة','صالح العمري','صفاء رمزي','صفي الدين الحلي','طفلة','طفلة الحرم','عائشة سابق','عادل علي بن علي','عبدالله البردوني','عبدالله السعيدي','عبدالله المقحم','عبدالله زمزم','عبدالمجيد الفيفي','عدنان العمادي','علي الحمود','علي الناصري','عماد الدين علي','عيادة خليل','عيسى جرابا','فاضل أصفر','فالح بن طفلة','قصي العسيلي','قصي عاصم العسيلي','كامل زيد','مؤيد حجازي','ماجد الشيبة','مارية الرفاعي','محمد إبراهيم يعقوب','محمد الرطيان','محمد علام','محمود حسان','محمود سامي البارودي','مصطفى صادق الرافعي','مطلق الحبردي','مكلوم','نسيبة الكيلاني','ياسر الحزيمي','يحيى الحمادي','يمان خالد','يوسف الدموكي'];
+    var cardAuthor = p.author || '';
+    var bodyText = rawText;
+    if(!cardAuthor && !isPhotoCard){
+      var tls = rawText.split('\n');
+      var tli = tls.length - 1;
+      while(tli >= 0 && !tls[tli].trim()) tli--;
+      if(tli >= 0){
+        var cand = tls[tli].trim().replace(/^[—\-:：]\s*/, '').trim();
+        if(CARD_AUTHORS.indexOf(cand) !== -1){
+          cardAuthor = cand;
+          tls.splice(tli, 1);
+          bodyText = tls.join('\n').trim();
+        }
+      }
+    }
+    if(!cardAuthor && p.tags){
+      for(var tg = 0; tg < p.tags.length; tg++){
+        var tname = String(p.tags[tg]).replace(/^#/, '').replace(/_/g, ' ').trim();
+        if(CARD_AUTHORS.indexOf(tname) !== -1){ cardAuthor = tname; break; }
+      }
+    }
+
     // قياس النص أولًا على قماش مؤقت: ارتفاع الكارت يتكيّف مع طول النص بدل
     // اختصاره، حتى لا يُحذف بيت من قصيدة — بحد أقصى 3240px لا يُختصر إلا بعده
     var size = 52, lines = [], lh = 0, H = 1080;
@@ -2332,7 +2358,7 @@
         size = sizes[si];
         meas.font = size + 'px ' + SERIF;
         lines = [];
-        rawText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(meas, seg, maxW)); });
+        bodyText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(meas, seg, maxW)); });
         lh = size * 1.7;
         var contentBottom = 500 + size + Math.max(0, lines.length - 1) * lh;
         H = Math.max(1080, Math.ceil(contentBottom + 263));
@@ -2400,7 +2426,7 @@
         ctx.drawImage(img, bx + (bw-dw)/2, by + (bh-dh)/2, dw, dh);
         ctx.restore();
         ctx.strokeStyle = '#a3793f'; ctx.lineWidth = 3; ctx.strokeRect(bx, by, bw, bh);
-        if(p.author){ ctx.fillStyle = '#2a1e14'; ctx.font = '38px ' + SERIF; ctx.fillText('— ' + p.author, cx, by+bh+74); }
+        if(cardAuthor){ ctx.fillStyle = '#2a1e14'; ctx.font = '38px ' + SERIF; ctx.fillText('— ' + cardAuthor, cx, by+bh+74); }
         finish();
       };
       img.onerror = function(){ drawTextFallback(); };
@@ -2413,7 +2439,7 @@
         var m2 = ctx;
         m2.font = size + 'px ' + SERIF;
         lines = [];
-        rawText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(m2, seg, W - 300)); });
+        bodyText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(m2, seg, W - 300)); });
         lh = size * 1.7;
       }
       ctx.fillStyle = '#c9a05f'; ctx.font = '700 110px ' + SERIF;
@@ -2422,9 +2448,9 @@
       var y = 500 + size;
       var lastBaseline = y;
       lines.forEach(function(ln){ ctx.fillText(ln, cx, y); lastBaseline = y; y += lh; });
-      if(p.author){
+      if(cardAuthor){
         ctx.fillStyle = '#8a6230'; ctx.font = '40px ' + SERIF;
-        ctx.fillText('— ' + p.author, cx, lastBaseline + 89);
+        ctx.fillText('— ' + cardAuthor, cx, lastBaseline + 89);
       }
       finish();
     }

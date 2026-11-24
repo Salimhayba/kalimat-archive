@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="كلمات أعجبتني — الأرشيف">
 <meta property="og:site_name" content="كلمات أعجبتني">
-<meta property="og:description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢ — أكثر من ٨١٠٠ نص قابل للبحث والتصفح.">
+<meta property="og:description" content="أرشيف شخصي لسالم عبدالواحد يجمع ما راقه من شعر ونثر على فيسبوك منذ عام ٢٠١٢ — أكثر من ٨٣٠٠ مادة بين شعر ونثر وصور، قابلة للبحث والتصفح.">
 <meta property="og:image" content="https://salimhayba.github.io/kalimat-archive/icon-512.png">
 <meta property="og:url" content="https://salimhayba.github.io/kalimat-archive/">
 <meta property="og:locale" content="ar_AR">
@@ -2315,11 +2315,42 @@
   }
 
   function downloadCard(p){
-    var W = 1080, H = 1080;
+    var W = 1080;
+    var SERIF = "'Traditional Arabic','Noto Naskh Arabic','Geeza Pro',serif";
+    var rawText = (p.text || '').replace(/[ \t]+\n/g, '\n').trim();
+    var ext0 = p.media ? (p.media.split('.').pop() || '').toLowerCase() : '';
+    var isPhotoCard = !!p.media && rawText.length < 20 && VIDEO_EXTS.indexOf(ext0) === -1;
+
+    // قياس النص أولًا على قماش مؤقت: ارتفاع الكارت يتكيّف مع طول النص بدل
+    // اختصاره، حتى لا يُحذف بيت من قصيدة — بحد أقصى 3240px لا يُختصر إلا بعده
+    var size = 52, lines = [], lh = 0, H = 1080;
+    if(!isPhotoCard){
+      var meas = document.createElement('canvas').getContext('2d');
+      var maxW = W - 300;
+      var sizes = [52, 48, 44, 40, 36, 32, 30, 28];
+      for(var si = 0; si < sizes.length; si++){
+        size = sizes[si];
+        meas.font = size + 'px ' + SERIF;
+        lines = [];
+        rawText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(meas, seg, maxW)); });
+        lh = size * 1.7;
+        var contentBottom = 500 + size + Math.max(0, lines.length - 1) * lh;
+        H = Math.max(1080, Math.ceil(contentBottom + 263));
+        if(H <= 3240) break;
+      }
+      if(H > 3240){
+        H = 3240;
+        var maxLines = Math.max(1, Math.floor((H - 263 - 500 - size) / lh) + 1);
+        if(lines.length > maxLines){
+          lines = lines.slice(0, maxLines);
+          lines[lines.length-1] = lines[lines.length-1].replace(/.$/, '…');
+        }
+      }
+    }
+
     var canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
     var ctx = canvas.getContext('2d');
-    var SERIF = "'Traditional Arabic','Noto Naskh Arabic','Geeza Pro',serif";
     var g = ctx.createLinearGradient(0, 0, 0, H);
     g.addColorStop(0, '#f8f1de'); g.addColorStop(1, '#efe6d3');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
@@ -2358,38 +2389,6 @@
       } else { save(canvas.toDataURL('image/png')); }
     }
 
-    function drawText(){
-      var rawText = (p.text || '').replace(/[ \t]+\n/g, '\n').trim();
-      ctx.fillStyle = '#c9a05f'; ctx.font = '700 110px ' + SERIF;
-      ctx.fillText('”', cx, 428);
-      var maxW = W - 300, top = 500, bottom = p.author ? 820 : 860;
-      var size = 52, lines = [];
-      while(size > 26){
-        ctx.font = size + 'px ' + SERIF;
-        lines = [];
-        rawText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(ctx, seg, maxW)); });
-        if(lines.length * (size*1.7) <= (bottom - top)) break;
-        size -= 4;
-      }
-      var lh = size * 1.7;
-      if(lines.length * lh > (bottom - top) && lines.length){
-        var maxLines = Math.max(1, Math.floor((bottom - top) / lh));
-        lines = lines.slice(0, maxLines);
-        lines[lines.length-1] = lines[lines.length-1].replace(/.$/, '…');
-      }
-      ctx.fillStyle = '#2a1e14'; ctx.font = size + 'px ' + SERIF;
-      var y = top + size;
-      lines.forEach(function(ln){ ctx.fillText(ln, cx, y); y += lh; });
-      if(p.author){
-        ctx.fillStyle = '#8a6230'; ctx.font = '40px ' + SERIF;
-        ctx.fillText('— ' + p.author, cx, 906);
-      }
-      finish();
-    }
-
-    var rawText0 = (p.text || '').trim();
-    var ext0 = p.media ? (p.media.split('.').pop() || '').toLowerCase() : '';
-    var isPhotoCard = !!p.media && rawText0.length < 20 && VIDEO_EXTS.indexOf(ext0) === -1;
     if(isPhotoCard){
       var img = new Image();
       img.onload = function(){
@@ -2404,9 +2403,31 @@
         if(p.author){ ctx.fillStyle = '#2a1e14'; ctx.font = '38px ' + SERIF; ctx.fillText('— ' + p.author, cx, by+bh+74); }
         finish();
       };
-      img.onerror = function(){ drawText(); };
+      img.onerror = function(){ drawTextFallback(); };
       img.src = 'media/' + p.media;
-    } else { drawText(); }
+    } else { drawTextFallback(); }
+
+    function drawTextFallback(){
+      // يُستخدم للنصوص، وكبديل إذا تعذّر تحميل صورة مادة مصوّرة
+      if(!lines.length){
+        var m2 = ctx;
+        m2.font = size + 'px ' + SERIF;
+        lines = [];
+        rawText.split('\n').forEach(function(seg){ lines = lines.concat(wrapCardLines(m2, seg, W - 300)); });
+        lh = size * 1.7;
+      }
+      ctx.fillStyle = '#c9a05f'; ctx.font = '700 110px ' + SERIF;
+      ctx.fillText('”', cx, 428);
+      ctx.fillStyle = '#2a1e14'; ctx.font = size + 'px ' + SERIF;
+      var y = 500 + size;
+      var lastBaseline = y;
+      lines.forEach(function(ln){ ctx.fillText(ln, cx, y); lastBaseline = y; y += lh; });
+      if(p.author){
+        ctx.fillStyle = '#8a6230'; ctx.font = '40px ' + SERIF;
+        ctx.fillText('— ' + p.author, cx, lastBaseline + 89);
+      }
+      finish();
+    }
   }
 
   // ================= Feed interactions (delegate) =================
